@@ -90,12 +90,12 @@ No!
    - https://student.uit.edu.vn/sinhvien/phieukhaosat
 2. Config
 3. Dùng tool _(1 trong 2)_:
-   - Ấn <kbd>Run Auto</kbd> để tự động làm hết khảo sát
+   - Ấn `Run Auto` để tự động làm hết khảo sát
    - Ấn từng link khảo sát để làm
 
 > [!NOTE]
 >
-> Nếu muốn tự làm khảo sát thì cần tắt Userscript hoặc extension Tampermonkey trước
+> Cần tắt Userscript hoặc extension Tampermonkey nếu muốn khảo sát thủ công
 
 ### 4️⃣ Tắt script khi không sử dụng
 
@@ -103,7 +103,7 @@ No!
 
 > [!CAUTION]
 >
-> Tắt script để tránh xung đột nếu có các loại khảo sát khác.
+> Tắt script để tránh xung đột nếu có các loại khảo sát khác
 
 ---
 
