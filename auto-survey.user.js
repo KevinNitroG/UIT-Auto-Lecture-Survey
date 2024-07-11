@@ -13,8 +13,10 @@
 // @grant           window.close
 // @grant           GM_setValue
 // @grant           GM_getValue
+// @grant           GM_deleteValue
 // @grant           GM_addStyle
 // @grant           GM_openInTab
+// @grant           GM_notification
 // @downloadURL     https://github.com/KevinNitroG/UIT-Auto-Lecture-Survey/raw/main/auto-survey.user.js
 // @updateURL       https://github.com/KevinNitroG/UIT-Auto-Lecture-Survey/raw/main/auto-survey.user.js
 // @supportURL      https://github.com/KevinNitroG/UIT-Auto-Lecture-Survey/issues
@@ -45,6 +47,7 @@
   ];
 
   const WINDOW_DONE_MSG = 'surveyDone';
+  const WINDOW_DONE_TITLE = 'HOÀN THÀNH KHẢO SÁT';
 
   class GM {
     #firstOpt;
@@ -52,9 +55,10 @@
     #thirdOpts;
 
     constructor() {
-      this.#firstOpt = GM_getValue('firstOpt', '');
+      this.#firstOpt = GM_getValue('firstOpt', 0);
       this.#secondOpts = GM_getValue('secondOpts', []);
       this.#thirdOpts = GM_getValue('thirdOpts', []);
+      console.log(this);
     }
 
     // TODO: Huhmm
@@ -99,19 +103,21 @@
           visibility: visible;
         }
 
-        #select-2, #select-3 {
+        #select-1, #select-2, #select-3 {
           display: flex;
           flex-direction: row;
           align-items: center;
         }
-        #select-2 > label, #select-3 > label {
+
+        #select-1 > label, #select-2 > label, #select-3 > label {
           margin-left: 10px;
           margin-right: 10px;
+          vertical-align: middle;
         }
       `);
     }
 
-    getUserOptions() {
+    getUserOpts() {
       return {
         firstOpt: this.#firstOpt,
         secondOpts: this.#secondOpts,
@@ -119,32 +125,70 @@
       };
     }
 
-    _saveUserOptions() {
+    _saveUserOpts() {
       GM_setValue('firstOpt', this.#firstOpt);
       GM_setValue('secondOpts', this.#secondOpts);
       GM_setValue('thirdOpts', this.#thirdOpts);
     }
 
-    _fetchUserOptions() {
-      const firstOpt = document.querySelector('#select-1');
-      firstOpt.check;
+    _deleteUserOpts() {
+      GM_deleteValue('firstOpts');
+      GM_deleteValue('secondOpts');
+      GM_deleteValue('thirdOpts');
     }
 
-    _saveUserOptionsTrigger() {
-      const configBtn = document.querySelector('#uals-save-config-btn');
-      configBtn.addEventListener('click', () => {
-        this._fetchUserOptions();
-        this._saveUserOptions();
+    tickOptsToPage() {
+      document
+        .querySelector(`#select-1 input[id="select-1-${this.#firstOpt}"]`)
+        .click();
+      for (const opt of this.#secondOpts) {
+        document.querySelector(`#select-2 input[id="select-2-${opt}"]`).click();
+      }
+
+      for (const opt of this.#thirdOpts) {
+        document.querySelector(`#select-3 input[id="select-3-${opt}"]`).click();
+      }
+    }
+
+    _fetchUserOptsFromPage() {
+      this.#firstOpt = parseInt(
+        document.querySelector('#select-1 input:checked').value
+      );
+      this.#secondOpts = [
+        ...document.querySelectorAll('#select-2 input:checked'),
+      ].map((checkbox) => parseInt(checkbox.value));
+      this.#thirdOpts = [
+        ...document.querySelectorAll('#select-3 input:checked'),
+      ].map((checkbox) => parseInt(checkbox.value));
+    }
+
+    saveUserOptsListener() {
+      const btn = document.querySelector('#uals-save-config-btn');
+      btn.addEventListener('click', () => {
+        this._fetchUserOptsFromPage();
+        this._saveUserOpts();
       });
     }
 
-    checkUserOption() {
+    resetUserOptsListener() {
+      const btn = document.querySelector('#uals-reset-config-btn');
+      btn.addEventListener('click', () => {
+        this._deleteUserOpts;
+        location.reload();
+      });
+    }
+
+    checkUserOpts() {
       if (
         this.#firstOpt === '' ||
         this.#secondOpts.length === 0 ||
         this.#thirdOpts.length === 0
       ) {
-        alert('Bạn cần thiết lập các tuỳ chọn 🥵');
+        GM_notification({
+          text: 'Bạn cần thiết lập các tuỳ chọn 🥵',
+          title: 'UALS',
+          tag: 'UALS-require_config',
+        });
         return false;
       }
       return true;
@@ -157,7 +201,7 @@
     #thirdOpts;
 
     constructor() {
-      const { firstOpt, secondOpts, thirdOpts } = GM().getUserOptions();
+      const { firstOpt, secondOpts, thirdOpts } = new GM().getUserOpts();
       this.#firstOpt = firstOpt;
       this.#secondOpts = secondOpts;
       this.#thirdOpts = thirdOpts;
@@ -176,11 +220,13 @@
       return Math.floor(Math.random() * max);
     }
 
+    // TODO: WIP. Check this again. Be careful of value and index. It should be value
     /** Fill in the first type form */
     _firstForm() {
       const labels = document.querySelectorAll('label.answertext');
-      for (let label of labels)
+      for (const label of labels) {
         if (label.innerText.trim() === this.#firstOpt) label.click();
+      }
     }
 
     // TODO: WIP. Find questions and each in question, select 1 random.
@@ -192,7 +238,7 @@
     /** Fill in the third (table) form which has 4 selections in each question */
     _thirdForm() {
       const questions = document.querySelectorAll('.answers-list.radio-list');
-      for (let question of questions) {
+      for (const question of questions) {
         const randomIndex = this._genRanInt(this.#thirdOpts.length);
         question.querySelector(this.#thirdOpts[randomIndex]).click();
       }
@@ -207,7 +253,10 @@
 
     /** Close tab if a survey is done */
     _done() {
-      if (doneWindow.innerText.trim() === 'HOÀN THÀNH KHẢO SÁT') {
+      if (
+        document.querySelector('.site-name').innerText.trim() ===
+        WINDOW_DONE_TITLE
+      ) {
         window.opener.postMessage(WINDOW_DONE_MSG, '*');
         window.close();
       }
@@ -227,7 +276,11 @@
       if (e.data === WINDOW_DONE_MSG) {
         this.#current++;
         if (this.#current >= this.#surveys.length) {
-          aler('Đã thực hiện xong tất cả các khảo sát 😇');
+          GM_notification({
+            text: 'Đã thực hiện xong tất cả các khảo sát 😇',
+            title: 'UALS',
+            tag: 'UALS-Auto_survey_done',
+          });
           this._removeListener();
           return;
         }
@@ -249,7 +302,11 @@
 
     run() {
       if (this.#current >= this.#surveys.length) {
-        aler('Không có khảo sát nào cả 😕');
+        GM_notification({
+          text: 'Không có khảo sát nào cả 😕',
+          title: 'UALS',
+          tag: 'UALS-No_survey',
+        });
         return;
       }
       this._addListener();
@@ -266,7 +323,10 @@
       this.#gm = new GM();
       this.#gm.addStyles();
       this._render();
-      if (!this.#gm.checkUserOption()) this.#gm.openConfigMenu();
+      if (!this.#gm.checkUserOpts()) this.toggleConfigMenu();
+      else this.#gm.tickOptsToPage();
+      this.#gm.saveUserOptsListener();
+      this.#gm.resetUserOptsListener();
     }
 
     /**
@@ -317,19 +377,25 @@
       return `<button class="uals-btn" id="uals-save-config-btn">Save</button>`;
     }
 
+    _resetConfigButtonHTML() {
+      return `<button class="uals-btn" id="uals-reset-config-btn">Reset</button>`;
+    }
+
     _configMenu() {
       let html = `
         <div id="uals-menu-container">
           <div id="menu-1-container">
             <h3 id="uals-menu-header">Chọn câu trả lời cho form loại 1</h3>
-            <select id="select-1" name="select-1">
+            <form id="select-1">
         `;
-      for (let i = 0; i < FIRST_SELECTIONS.length; i++)
+      for (let i = 0; i < FIRST_SELECTIONS.length; i++) {
         html += `
-              <option value="${i}">${FIRST_SELECTIONS[i]}</option>
+                <input type="radio" name="select-1" id="select-1-${i}" value="${i}">
+                <label for="select-1-${i}">${FIRST_SELECTIONS[i]}</label>
           `;
+      }
       html += `
-            </select>
+            </form>
           </div>
         `;
       html += `
@@ -337,11 +403,12 @@
             <h3 id="uals-menu-header">Chọn câu trả lời cho form loại 2</h3>
             <form id="select-2">
         `;
-      for (let i = 0; i < SECOND_SELECTIONS.length; i++)
+      for (let i = 0; i < SECOND_SELECTIONS.length; i++) {
         html += `
-              <input type="checkbox" id="select-2-${i}" value="${i}" />
+              <input type="checkbox" name="select-2" id="select-2-${i}" value="${i}" />
               <label for="select-2-${i}">${SECOND_SELECTIONS[i]}</label>
           `;
+      }
       html += `
             </form>
           </div>
@@ -351,17 +418,19 @@
             <h3 id="uals-menu-header">
               Chọn câu trả lời cho form loại 3 (mức độ hài lòng)
             </h3>
-            <form id="select-2">
+            <form id="select-3">
         `;
-      for (let i = 0; i < THIRD_SELECTIONS.length; i++)
+      for (let i = 0; i < THIRD_SELECTIONS.length; i++) {
         html += `
-              <input type="checkbox" id="select-3-${i}" value="${i}" />
+              <input type="checkbox" name="select-3" id="select-3-${i}" value="${i}" />
               <label for="select-3-${i}">Mức ${i + 1}</label>
           `;
+      }
       html += `
             </form>
           </div>
           ${this._saveConfigButtonHTML()}
+          ${this._resetConfigButtonHTML()}
         </div>
         `;
       return html;
@@ -395,11 +464,13 @@
     }
   }
 
-  (function () {
+  function main() {
     if (window.location.pathname === '/sinhvien/phieukhaosat') {
       new Home();
     } else {
       new FillInForm();
     }
-  })();
+  }
+
+  main();
 })();
