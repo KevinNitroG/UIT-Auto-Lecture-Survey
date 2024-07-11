@@ -172,7 +172,7 @@
     resetUserOptsListener() {
       const btn = document.querySelector('#uals-reset-config-btn');
       btn.addEventListener('click', () => {
-        this._deleteUserOpts;
+        this._deleteUserOpts();
         location.reload();
       });
     }
