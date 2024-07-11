@@ -7,57 +7,53 @@
 ██║   ██║╚════██║██╔══╝  ██╔══██╗╚════██║██║     ██╔══██╗██║██╔═══╝    ██║   
 ╚██████╔╝███████║███████╗██║  ██║███████║╚██████╗██║  ██║██║██║        ██║   
  ╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝╚═╝        ╚═╝   
-<strong>UIT - AUTO LECTURER SURVEY</strong> <em>(UALS)</em>
-Tự động khảo sát giảng viên <em>(khảo sát môn học)</em> cho sinh viên trường UIT
+<strong>UIT - AUTO LECTURE SURVEY</strong> <em>(UALS)</em>
+Tự động khảo sát môn học UIT
 </pre>
 
-[![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/KevinNitroG/UIT-Auto-Lecturer-Survey?style=for-the-badge&color=CAEDFF)](../../commits/main)
-![GitHub issues](https://img.shields.io/github/issues-raw/KevinNitroG/UIT-Auto-Lecturer-Survey?style=for-the-badge&color=ffadad)
-![GitHub closed issues](https://img.shields.io/github/issues-closed/KevinNitroG/UIT-Auto-Lecturer-Survey?style=for-the-badge&color=%23ffc6ff)
-![GitHub repo size](https://img.shields.io/github/repo-size/KevinNitroG/UIT-Auto-Lecturer-Survey?style=for-the-badge&color=D8B4F8)
-[![GitHub contributors](https://img.shields.io/github/contributors/KevinNitroG/UIT-Auto-Lecturer-Survey?style=for-the-badge&color=FBF0B2)](../../graphs/contributors)
-[![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/KevinNitroG/UIT-Auto-Lecturer-Survey?style=for-the-badge)](https://www.codefactor.io/repository/github/kevinnitrog/uit-auto-lecturer-survey)
-[![wakatime](https://wakatime.com/badge/github/KevinNitroG/UIT-Auto-Lecturer-Survey.svg?style=for-the-badge)](https://wakatime.com/badge/github/KevinNitroG/UIT-Auto-Lecturer-Survey)
+[![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/KevinNitroG/UIT-Auto-Lecture-Survey?style=for-the-badge&color=CAEDFF)](../../commits/main)
+![GitHub issues](https://img.shields.io/github/issues-raw/KevinNitroG/UIT-Auto-Lecture-Survey?style=for-the-badge&color=ffadad)
+![GitHub closed issues](https://img.shields.io/github/issues-closed/KevinNitroG/UIT-Auto-Lecture-Survey?style=for-the-badge&color=%23ffc6ff)
+![GitHub repo size](https://img.shields.io/github/repo-size/KevinNitroG/UIT-Auto-Lecture-Survey?style=for-the-badge&color=D8B4F8)
+[![GitHub contributors](https://img.shields.io/github/contributors/KevinNitroG/UIT-Auto-Lecture-Survey?style=for-the-badge&color=FBF0B2)](../../graphs/contributors)
+[![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/KevinNitroG/UIT-Auto-Lecture-Survey?style=for-the-badge)](https://www.codefactor.io/repository/github/kevinnitrog/uit-auto-lecturer-survey)
+[![wakatime](https://wakatime.com/badge/github/KevinNitroG/UIT-Auto-Lecture-Survey.svg?style=for-the-badge)](https://wakatime.com/badge/github/KevinNitroG/UIT-Auto-Lecture-Survey)
 
-[![DeepSource](https://app.deepsource.com/gh/KevinNitroG/UIT-Auto-Lecturer-Survey.svg/?label=active+issues&show_trend=true&token=af8s5K2DNJnNqcemAWM_beFG)](https://app.deepsource.com/gh/KevinNitroG/UIT-Auto-Lecturer-Survey/)
-[![DeepSource](https://app.deepsource.com/gh/KevinNitroG/UIT-Auto-Lecturer-Survey.svg/?label=resolved+issues&show_trend=true&token=af8s5K2DNJnNqcemAWM_beFG)](https://app.deepsource.com/gh/KevinNitroG/UIT-Auto-Lecturer-Survey/)
+[![DeepSource](https://app.deepsource.com/gh/KevinNitroG/UIT-Auto-Lecture-Survey.svg/?label=active+issues&show_trend=true&token=af8s5K2DNJnNqcemAWM_beFG)](https://app.deepsource.com/gh/KevinNitroG/UIT-Auto-Lecture-Survey/)
+[![DeepSource](https://app.deepsource.com/gh/KevinNitroG/UIT-Auto-Lecture-Survey.svg/?label=resolved+issues&show_trend=true&token=af8s5K2DNJnNqcemAWM_beFG)](https://app.deepsource.com/gh/KevinNitroG/UIT-Auto-Lecture-Survey/)
 
-> [!IMPORTANT]
+> [!NOTE]
 >
-> Cần lắm người đập đi xây lại hộ. Chính tôi còn không biết tôi viết cái gì 😐
->
-> Tôi không biết code JS
+> Đây gọi là script _(userscript)_, không phải là tool!
 
 ---
 
 ## 📃 TABLE OF CONTENTS
 
-- [✨ UIT - AUTO LECTURER SURVEY ✨](#-uit---auto-lecturer-survey-)
-  - [📃 TABLE OF CONTENTS](#-table-of-contents)
-  - [🎆 CHỨC NĂNG](#-chức-năng)
-  - [🥂 DEMO](#-demo)
-    - [🖼️ Image](#️-image)
-    - [🎬 Video](#-video)
-  - [🪴 HƯỚNG DẪN](#-hướng-dẫn)
-    - [1️⃣ Cài đặt extension Tampermonkey](#1️⃣-cài-đặt-extension-tampermonkey)
-    - [2️⃣ Cài script](#2️⃣-cài-script)
-    - [3️⃣ Ấn khảo sát](#3️⃣-ấn-khảo-sát)
-    - [4️⃣ Tắt script khi không sử dụng](#4️⃣-tắt-script-khi-không-sử-dụng)
-  - [📒 TODO](#-todo)
-  - [📝 LICENSE](#-license)
-  - [⭐ STAR GRAPH](#-star-graph)
+<!-- toc -->
+
+- [🎆 CHỨC NĂNG](#%F0%9F%8E%86-ch%E1%BB%A9c-nang)
+- [🥂 DEMO](#%F0%9F%A5%82-demo)
+  * [🖼️ Image](#%F0%9F%96%BC%EF%B8%8F-image)
+  * [🎬 Video](#%F0%9F%8E%AC-video)
+- [🪴 HƯỚNG DẪN](#%F0%9F%AA%B4-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn)
+  * [1️⃣ Cài đặt extension Tampermonkey](#1%EF%B8%8F%E2%83%A3-cai-d%E1%BA%B7t-extension-tampermonkey)
+  * [2️⃣ Cài đặt script](#2%EF%B8%8F%E2%83%A3-cai-d%E1%BA%B7t-script)
+  * [3️⃣ Ấn khảo sát](#3%EF%B8%8F%E2%83%A3-%E1%BA%A5n-kh%E1%BA%A3o-sat)
+  * [4️⃣ Tắt script khi không sử dụng](#4%EF%B8%8F%E2%83%A3-t%E1%BA%AFt-script-khi-khong-s%E1%BB%AD-d%E1%BB%A5ng)
+- [📝 LICENSE](#%F0%9F%93%9D-license)
+- [⭐ STAR GRAPH](#%E2%AD%90-star-graph)
+
+<!-- tocstop -->
 
 ---
 
 ## 🎆 CHỨC NĂNG
 
-- Nút tự động làm khảo sát tại [HOMEPAGE](https://student.uit.edu.vn/sinhvien/phieukhaosat)
-- Nút setting để tuỳ chỉnh option tự động chọn
-- Chọn random cho khảo sát loại 1
-  > [Option loại 1](/UITAutoLecturerSurvey.user.js#L26)
-- Chọn random đánh giá 1 → 4 cho khảo sát loại 2
-  > [Option loại 2](/UITAutoLecturerSurvey.user.js#L38)
-- Tự động ấn tiếp tục, hoàn thành khảo sát, đóng tab khi hoàn thành
+- Tùy chỉnh lựa chọn trả lời khảo sát _(có random)_
+- Tự động điền khảo sát
+- Tự động đóng tab khi hoàn thành
+- One click điền khảo sát 💪
 
 ---
 
@@ -65,14 +61,11 @@ Tự động khảo sát giảng viên <em>(khảo sát môn học)</em> cho sin
 
 ### 🖼️ Image
 
-- Home Page
-  ![Home Page Demo Image](assets/Image/HomePage.png)
-- Home Page - Setting
-  ![Home Page - Setting Demo Image](assets/Image/HomePage-Setting.png)
+![home](./assets/images/home.png)
 
 ### 🎬 Video
 
-Chưa có ní ơi
+No!
 
 ---
 
@@ -86,24 +79,20 @@ Chưa có ní ơi
 - [![Firefox](https://img.shields.io/badge/Firefox-%23ffd6a5?style=for-the-badge&logo=firefoxbrowser&logoColor=white)](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
 - [![Opera](https://img.shields.io/badge/Opera-ffadad?style=for-the-badge&logo=opera&logoColor=white)](https://addons.opera.com/en/extensions/details/tampermonkey-beta/)
 
-### 2️⃣ Cài script
+### 2️⃣ Cài đặt script
 
-[![UIT Lecturer Survey](https://img.shields.io/badge/UIT_Auto_Lecturer_Survey-Tampermonkey-a0c4ff?style=for-the-badge)](../../raw/main/UITAutoLecturerSurvey.user.js)
+[![auto-survey.user.js](https://img.shields.io/badge/UIT_Auto_Lecturer_Survey-Tampermonkey-a0c4ff?style=for-the-badge)](../../raw/main/src/auto-survey.user.js)
 
 ### 3️⃣ Ấn khảo sát
 
-1. Vào trang khảo sát _(1 trong 2 link)_
+1. Vào trang khảo sát _(1 trong 2)_
    - https://link.uit.edu.vn/khaosatmh
    - https://student.uit.edu.vn/sinhvien/phieukhaosat
-2. 2 kiểu:
+2. Config
    - Ấn `Auto Lecturer Survey` để tự động làm hết khảo sát
    - Ấn từng link khảo sát để làm
 
 > [!NOTE]
->
-> Khuyến khích config variable như lày
->
-> ![sample-variable-config](./assets/Image/sample-variables-setup.png)
 >
 > Nếu muốn tự làm khảo sát thì cần tắt userscript hoặc tắt extension Tampermonkey trước
 
@@ -113,14 +102,7 @@ Chưa có ní ơi
 
 > [!CAUTION]
 >
-> Vì không rõ các link khảo sát sẽ giống nhau hay không nên thôi tốt nhất tắt khi không sử dụng. Chỉ bật khi làm khảo sát giảng viên thôi 😇
-
----
-
-## 📒 TODO
-
-- [ ] Split first type question
-- [ ] Có cách nào tự động tiếp tục khảo sát tiếp theo sau khi hoàn thành khảo sát, ngoài việc đặt thời gian cụ thể?
+> Vì không rõ các link khảo sát sẽ giống nhau hay không nên thôi tốt nhất tắt khi không sử dụng. Chỉ bật khi làm khảo sát môn học thôi 😇
 
 ---
 
@@ -132,10 +114,10 @@ Chưa có ní ơi
 
 ## ⭐ STAR GRAPH
 
-<a href="https://star-history.com/#KevinNitroG/UIT-Auto-Lecturer-Survey&Timeline">
+<a href="https://star-history.com/#KevinNitroG/UIT-Auto-Lecture-Survey&Timeline">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=KevinNitroG/UIT-Auto-Lecturer-Survey&type=Timeline&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=KevinNitroG/UIT-Auto-Lecturer-Survey&type=Timeline" />
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=KevinNitroG/UIT-Auto-Lecturer-Survey&type=Timeline" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=KevinNitroG/UIT-Auto-Lecture-Survey&type=Timeline&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=KevinNitroG/UIT-Auto-Lecture-Survey&type=Timeline" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=KevinNitroG/UIT-Auto-Lecture-Survey&type=Timeline" />
   </picture>
 </a>
