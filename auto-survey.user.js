@@ -58,7 +58,6 @@
       this.#firstOpt = GM_getValue('firstOpt', 0);
       this.#secondOpts = GM_getValue('secondOpts', []);
       this.#thirdOpts = GM_getValue('thirdOpts', []);
-      console.log(this);
     }
 
     // TODO: Huhmm
