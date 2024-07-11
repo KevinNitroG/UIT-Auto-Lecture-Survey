@@ -23,31 +23,31 @@
 // ==/UserScript==
 
 (function () {
-  'use strict';
+  "use strict";
 
   const FIRST_SELECTIONS = [
-    '<50%',
-    '50-80%',
-    '>80%',
-    'Không biết chuẩn đầu ra là gì',
+    "<50%",
+    "50-80%",
+    ">80%",
+    "Không biết chuẩn đầu ra là gì",
   ];
 
   const SECOND_SELECTIONS = [
-    'Dưới 50%',
-    'Từ 50 đến dưới 70%',
-    'Từ 70 đến dưới 90%',
-    'Trên 90%',
+    "Dưới 50%",
+    "Từ 50 đến dưới 70%",
+    "Từ 70 đến dưới 90%",
+    "Trên 90%",
   ];
 
   const THIRD_SELECTIONS = [
-    'answer_cell_00MH01.answer-item.radio-item',
-    'answer_cell_00MH02.answer-item.radio-item',
-    'answer_cell_00MH03.answer-item.radio-item',
-    'answer_cell_00MH04.answer-item.radio-item',
+    "answer_cell_00MH01.answer-item.radio-item",
+    "answer_cell_00MH02.answer-item.radio-item",
+    "answer_cell_00MH03.answer-item.radio-item",
+    "answer_cell_00MH04.answer-item.radio-item",
   ];
 
-  const WINDOW_DONE_MSG = 'AULS - Done form';
-  const WINDOW_DONE_TITLE = 'HOÀN THÀNH KHẢO SÁT';
+  const WINDOW_DONE_MSG = "AULS - Done form";
+  const WINDOW_DONE_TITLE = "HOÀN THÀNH KHẢO SÁT";
 
   /**
    *
@@ -60,9 +60,9 @@
     #thirdOpts;
 
     constructor() {
-      this.#firstOpt = GM_getValue('firstOpt', 0);
-      this.#secondOpts = GM_getValue('secondOpts', []);
-      this.#thirdOpts = GM_getValue('thirdOpts', []);
+      this.#firstOpt = GM_getValue("firstOpt", 0);
+      this.#secondOpts = GM_getValue("secondOpts", []);
+      this.#thirdOpts = GM_getValue("thirdOpts", []);
     }
 
     // TODO: Huhmm
@@ -136,27 +136,27 @@
     }
 
     saveUserOpts() {
-      GM_setValue('firstOpt', this.#firstOpt);
-      GM_setValue('secondOpts', this.#secondOpts);
-      GM_setValue('thirdOpts', this.#thirdOpts);
+      GM_setValue("firstOpt", this.#firstOpt);
+      GM_setValue("secondOpts", this.#secondOpts);
+      GM_setValue("thirdOpts", this.#thirdOpts);
     }
 
     deleteUserOpts() {
-      GM_deleteValue('firstOpts');
-      GM_deleteValue('secondOpts');
-      GM_deleteValue('thirdOpts');
+      GM_deleteValue("firstOpts");
+      GM_deleteValue("secondOpts");
+      GM_deleteValue("thirdOpts");
     }
 
     checkUserOpts() {
       if (
-        this.#firstOpt === '' ||
+        this.#firstOpt === "" ||
         this.#secondOpts.length === 0 ||
         this.#thirdOpts.length === 0
       ) {
         GM_notification({
-          text: 'Bạn cần thiết lập các tuỳ chọn 🥵',
-          title: 'UALS',
-          tag: 'UALS-require_config',
+          text: "Bạn cần thiết lập các tuỳ chọn 🥵",
+          title: "UALS",
+          tag: "UALS-require_config",
         });
         return false;
       }
@@ -192,7 +192,7 @@
     // TODO: WIP. Check this again. Be careful of value and index. It should be value
     /** Fill in the first type form */
     _firstForm() {
-      const labels = document.querySelectorAll('label.answertext');
+      const labels = document.querySelectorAll("label.answertext");
       for (const label of labels) {
         if (label.innerText.trim() === this.#firstOpt) label.click();
       }
@@ -205,7 +205,7 @@
     }
 
     _thirdForm() {
-      const questions = document.querySelectorAll('.answers-list.radio-list');
+      const questions = document.querySelectorAll(".answers-list.radio-list");
       for (const question of questions) {
         const randomIndex = this._genRanInt(this.#thirdOpts.length);
         question.querySelector(this.#thirdOpts[randomIndex]).click();
@@ -220,10 +220,10 @@
 
     _done() {
       if (
-        document.querySelector('.site-name')?.innerText.trim() ===
+        document.querySelector(".site-name")?.innerText.trim() ===
         WINDOW_DONE_TITLE
       ) {
-        window.opener.postMessage(WINDOW_DONE_MSG, '*');
+        window.opener.postMessage(WINDOW_DONE_MSG, "*");
         window.close();
       }
     }
@@ -249,9 +249,9 @@
         this.#current++;
         if (this.#current >= this.#surveys.length) {
           GM_notification({
-            text: 'Đã thực hiện xong tất cả các khảo sát 😇',
-            title: 'UALS',
-            tag: 'UALS-Auto_survey_done',
+            text: "Đã thực hiện xong tất cả các khảo sát 😇",
+            title: "UALS",
+            tag: "UALS-Auto_survey_done",
           });
           this._removeListener();
           return;
@@ -261,11 +261,11 @@
     }
 
     _addListener() {
-      window.addEventListener('message', this._listenEvent);
+      window.addEventListener("message", this._listenEvent);
     }
 
     _removeListener() {
-      window.removeEventListener('message', this._listenEvent);
+      window.removeEventListener("message", this._listenEvent);
     }
 
     _doSurveys() {
@@ -275,9 +275,9 @@
     run() {
       if (this.#current >= this.#surveys.length) {
         GM_notification({
-          text: 'Không có khảo sát nào cả 😕',
-          title: 'UALS',
-          tag: 'UALS-No_survey',
+          text: "Không có khảo sát nào cả 😕",
+          title: "UALS",
+          tag: "UALS-No_survey",
         });
         return;
       }
@@ -308,9 +308,9 @@
      * @returns {string[]} An array of survey URLs
      */
     _getSurveyURLs() {
-      const urls = [...document.querySelectorAll('table a')];
+      const urls = [...document.querySelectorAll("table a")];
       return urls.filter((url) =>
-        url.innerHTML.includes('khảo sát về môn học')
+        url.innerHTML.includes("khảo sát về môn học"),
       );
     }
 
@@ -319,14 +319,14 @@
         <div id="uals-container">
         </div>
       `;
-      const position = document.querySelector('#content .content');
-      position.insertAdjacentHTML('afterbegin', html);
-      const container = position.querySelector('#uals-container');
+      const position = document.querySelector("#content .content");
+      position.insertAdjacentHTML("afterbegin", html);
+      const container = position.querySelector("#uals-container");
       return container;
     }
 
     _insertElement(element) {
-      this.#container.insertAdjacentHTML('beforeend', element);
+      this.#container.insertAdjacentHTML("beforeend", element);
     }
 
     _bannerHTML() {
@@ -412,8 +412,8 @@
     }
 
     toggleConfigMenu() {
-      const menuContainer = document.getElementById('uals-menu-container');
-      menuContainer.classList.toggle('show');
+      const menuContainer = document.getElementById("uals-menu-container");
+      menuContainer.classList.toggle("show");
     }
 
     tickOptsToPage() {
@@ -434,19 +434,19 @@
     _fetchUserOptsFromPage() {
       return {
         firstOpt: parseInt(
-          document.querySelector('#select-1 input:checked').value
+          document.querySelector("#select-1 input:checked").value,
         ),
         secondOpts: [
-          ...document.querySelectorAll('#select-2 input:checked'),
+          ...document.querySelectorAll("#select-2 input:checked"),
         ].map((checkbox) => parseInt(checkbox.value)),
         thirdOpts: [
-          ...document.querySelectorAll('#select-3 input:checked'),
+          ...document.querySelectorAll("#select-3 input:checked"),
         ].map((checkbox) => parseInt(checkbox.value)),
       };
     }
 
     saveUserOptsListener(element) {
-      element.addEventListener('click', () => {
+      element.addEventListener("click", () => {
         const userOpts = this._fetchUserOptsFromPage();
         this.#gm.setUserOpts(userOpts);
         this.#gm.saveUserOpts();
@@ -454,7 +454,7 @@
     }
 
     resetUserOptsListener(element) {
-      element.addEventListener('click', () => {
+      element.addEventListener("click", () => {
         this.#gm.deleteUserOpts();
         location.reload();
       });
@@ -471,24 +471,24 @@
       this._insertElement(btnContainer);
       this._insertElement(this._configMenuHTML());
       document
-        .querySelector('#uals-config-btn')
-        .addEventListener('click', this.toggleConfigMenu);
+        .querySelector("#uals-config-btn")
+        .addEventListener("click", this.toggleConfigMenu);
       this.saveUserOptsListener(
-        document.querySelector('#uals-save-config-btn')
+        document.querySelector("#uals-save-config-btn"),
       );
       this.resetUserOptsListener(
-        document.querySelector('#uals-reset-config-btn')
+        document.querySelector("#uals-reset-config-btn"),
       );
       document
-        .querySelector('#uals-run-btn')
-        .addEventListener('click', () =>
-          new SurveyManager(this._getSurveyURLs()).run()
+        .querySelector("#uals-run-btn")
+        .addEventListener("click", () =>
+          new SurveyManager(this._getSurveyURLs()).run(),
         );
     }
   }
 
   function main() {
-    if (window.location.pathname === '/sinhvien/phieukhaosat') {
+    if (window.location.pathname === "/sinhvien/phieukhaosat") {
       new Home();
     } else {
       new FillInForm();
