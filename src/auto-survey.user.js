@@ -1,25 +1,25 @@
 // ==UserScript==
-// @name            UIT - Auto Lecture Survey (uals)
+// @name            UIT - Auto Lecture Survey (UALS)
+// @version         3.0
 // @author          Kevin Nitro
 // @namespace       https://github.com/KevinNitroG
 // @description     Userscript tự động khảo sát môn học UIT. Khuyến nghị disable script khi không sử dụng, tránh conflict với các khảo sát / link khác của trường.
+// @downloadURL     https://github.com/KevinNitroG/UIT-Auto-Lecture-Survey/raw/main/src/auto-survey.user.js
+// @updateURL       https://github.com/KevinNitroG/UIT-Auto-Lecture-Survey/raw/main/src/auto-survey.user.js
+// @supportURL      https://github.com/KevinNitroG/UIT-Auto-Lecture-Survey/issues
 // @license         https://github.com/KevinNitroG/UIT-Auto-Lecture-Survey/raw/main/LICENSE
-// @version         3.0
-// @icon            https://github.com/KevinNitroG/UIT-Auto-Lecture-Survey/raw/main/UIT-logo.png
+// @icon            https://github.com/KevinNitroG/UIT-Auto-Lecture-Survey/raw/main/assets/images/UIT-logo.png
+// @run-at          document-idle
 // @match           http*://student.uit.edu.vn/sinhvien/phieukhaosat
 // @match           http*://survey.uit.edu.vn/index.php/survey/index
 // @match           http*://survey.uit.edu.vn/index.php/survey/index/sid/*/token/*
-// @run-at          document-idle
-// @grant           window.close
-// @grant           GM_setValue
-// @grant           GM_getValue
-// @grant           GM_deleteValue
 // @grant           GM_addStyle
-// @grant           GM_openInTab
+// @grant           GM_deleteValue
+// @grant           GM_getValue
 // @grant           GM_notification
-// @downloadURL     https://github.com/KevinNitroG/UIT-Auto-Lecture-Survey/raw/main/auto-survey.user.js
-// @updateURL       https://github.com/KevinNitroG/UIT-Auto-Lecture-Survey/raw/main/auto-survey.user.js
-// @supportURL      https://github.com/KevinNitroG/UIT-Auto-Lecture-Survey/issues
+// @grant           GM_openInTab
+// @grant           GM_setValue
+// @grant           window.close
 // ==/UserScript==
 
 (function () {
@@ -46,7 +46,7 @@
     'answer_cell_00MH04.answer-item.radio-item',
   ];
 
-  const WINDOW_DONE_MSG = 'surveyDone';
+  const WINDOW_DONE_MSG = 'AULS - Done form';
   const WINDOW_DONE_TITLE = 'HOÀN THÀNH KHẢO SÁT';
 
   /**
@@ -69,13 +69,14 @@
     addStyles() {
       GM_addStyle(`
         #uals-container {
+          align-items: center;
           display: flex;
           flex-direction: column;
           justify-content: center;
-          align-items: center;
+          border: solid #115d9d 0.05rem;
         }
 
-        #uals-btn-container {
+        .uals-btn-container {
           align-items: center;
           display: flex;
           justify-content: center;
@@ -86,7 +87,7 @@
           border-radius: 0.5rem;
           border: none;
           color: white;
-          margin: 0.5rem 0.5rem 1rem 0.5rem;
+          margin: 0.4rem 0.3rem;
           padding: 0.5rem;
           transition: background-color 0.3s ease-in-out;
         }
@@ -108,14 +109,13 @@
         }
 
         #select-1, #select-2, #select-3 {
+          align-items: center;
           display: flex;
           flex-direction: row;
-          align-items: center;
         }
 
         #select-1 > label, #select-2 > label, #select-3 > label {
-          margin-left: 10px;
-          margin-right: 10px;
+          margin: auto 10px;
           vertical-align: middle;
         }
       `);
@@ -135,55 +135,16 @@
       };
     }
 
-    _saveUserOpts() {
+    saveUserOpts() {
       GM_setValue('firstOpt', this.#firstOpt);
       GM_setValue('secondOpts', this.#secondOpts);
       GM_setValue('thirdOpts', this.#thirdOpts);
     }
 
-    _deleteUserOpts() {
+    deleteUserOpts() {
       GM_deleteValue('firstOpts');
       GM_deleteValue('secondOpts');
       GM_deleteValue('thirdOpts');
-    }
-
-    tickOptsToPage() {
-      document
-        .querySelector(`#select-1 input[id="select-1-${this.#firstOpt}"]`)
-        .click();
-      for (const opt of this.#secondOpts) {
-        document.querySelector(`#select-2 input[id="select-2-${opt}"]`).click();
-      }
-
-      for (const opt of this.#thirdOpts) {
-        document.querySelector(`#select-3 input[id="select-3-${opt}"]`).click();
-      }
-    }
-
-    _fetchUserOptsFromPage() {
-      this.#firstOpt = parseInt(
-        document.querySelector('#select-1 input:checked').value
-      );
-      this.#secondOpts = [
-        ...document.querySelectorAll('#select-2 input:checked'),
-      ].map((checkbox) => parseInt(checkbox.value));
-      this.#thirdOpts = [
-        ...document.querySelectorAll('#select-3 input:checked'),
-      ].map((checkbox) => parseInt(checkbox.value));
-    }
-
-    saveUserOptsListener(element) {
-      element.addEventListener('click', () => {
-        this._fetchUserOptsFromPage();
-        this._saveUserOpts();
-      });
-    }
-
-    resetUserOptsListener(element) {
-      element.addEventListener('click', () => {
-        this._deleteUserOpts();
-        location.reload();
-      });
     }
 
     checkUserOpts() {
@@ -243,7 +204,6 @@
       // const labels = document.querySelectorAll('label.answertext');
     }
 
-    /** Fill in the third (table) form which has 4 selections in each question */
     _thirdForm() {
       const questions = document.querySelectorAll('.answers-list.radio-list');
       for (const question of questions) {
@@ -252,17 +212,15 @@
       }
     }
 
-    /** Click on submit button */
     _submit() {
       document
         .querySelector('button[type="submit"][id="movenextbtn"]')
         ?.click();
     }
 
-    /** Close tab if a survey is done */
     _done() {
       if (
-        document.querySelector('.site-name').innerText.trim() ===
+        document.querySelector('.site-name')?.innerText.trim() ===
         WINDOW_DONE_TITLE
       ) {
         window.opener.postMessage(WINDOW_DONE_MSG, '*');
@@ -283,7 +241,7 @@
     constructor(surveys) {
       this.#surveys = surveys;
       this.#current = 0;
-      this._listenEvent = this._listenEvent.bind(this); // Copilot said me to do this. IDK why :v
+      this._listenEvent = this._listenEvent.bind(this); // Copilot told me to do this. IDK why :v
     }
 
     _listenEvent(e) {
@@ -331,13 +289,11 @@
   /**
    *
    * @class
-   * @classdesc render, mange functions in Home
+   * @classdesc Render, manage functions in Home
    */
   class Home {
     #container;
     #gm;
-    #saveConfigBtn;
-    #resetConfigBtn;
 
     constructor() {
       this.#container = this._getContainer();
@@ -345,11 +301,7 @@
       this.#gm.addStyles();
       this._render();
       if (!this.#gm.checkUserOpts()) this.toggleConfigMenu();
-      else this.#gm.tickOptsToPage();
-      this.#saveConfigBtn = document.querySelector('#uals-save-config-btn');
-      this.#resetConfigBtn = document.querySelector('#uals-reset-config-btn');
-      this.#gm.saveUserOptsListener(this.#saveConfigBtn);
-      this.#gm.resetUserOptsListener(this.#resetConfigBtn);
+      else this.tickOptsToPage();
     }
 
     /**
@@ -367,10 +319,9 @@
         <div id="uals-container">
         </div>
       `;
-      const position = document.querySelector('.content');
+      const position = document.querySelector('#content .content');
       position.insertAdjacentHTML('afterbegin', html);
       const container = position.querySelector('#uals-container');
-      container.insertAdjacentHTML('afterend', '<br>');
       return container;
     }
 
@@ -378,9 +329,8 @@
       this.#container.insertAdjacentHTML('beforeend', element);
     }
 
-    _renderBanner() {
-      const banner = `<p align="center">UIT - Auto Lecture Survey - Kevin Nitro</p>`;
-      this._insertElement(banner);
+    _bannerHTML() {
+      return `<h2 align="center" style="margin: auto;">UIT - Auto Lecture Survey - Kevin Nitro</h2>`;
     }
 
     _runAutoSurvey() {
@@ -404,10 +354,10 @@
       return `<button class="uals-btn" id="uals-reset-config-btn">Reset</button>`;
     }
 
-    _configMenu() {
+    _configMenuHTML() {
       let html = `
         <div id="uals-menu-container">
-          <div id="menu-1-container">
+          <div class="uals-question-container">
             <h3 id="uals-menu-header">Chọn câu trả lời cho form loại 1</h3>
             <form id="select-1">
         `;
@@ -422,7 +372,7 @@
           </div>
         `;
       html += `
-          <div id="menu-2-container">
+          <div class="uals-question-container">
             <h3 id="uals-menu-header">Chọn câu trả lời cho form loại 2</h3>
             <form id="select-2">
         `;
@@ -437,7 +387,7 @@
           </div>
         `;
       html += `
-          <div id="menu-3-container">
+          <div class="uals-question-container">
             <h3 id="uals-menu-header">
               Chọn câu trả lời cho form loại 3 (mức độ hài lòng)
             </h3>
@@ -452,8 +402,10 @@
       html += `
             </form>
           </div>
-          ${this._saveConfigButtonHTML()}
-          ${this._resetConfigButtonHTML()}
+          <div class="uals-btn-container">
+            ${this._resetConfigButtonHTML()}
+            ${this._saveConfigButtonHTML()}
+          </div>
         </div>
         `;
       return html;
@@ -464,9 +416,23 @@
       menuContainer.classList.toggle('show');
     }
 
+    tickOptsToPage() {
+      const { firstOpt, secondOpts, thirdOpts } = this.#gm.getUserOpts();
+      document
+        .querySelector(`#select-1 input[id="select-1-${firstOpt}"]`)
+        .click();
+      for (const opt of secondOpts) {
+        document.querySelector(`#select-2 input[id="select-2-${opt}"]`).click();
+      }
+
+      for (const opt of thirdOpts) {
+        document.querySelector(`#select-3 input[id="select-3-${opt}"]`).click();
+      }
+    }
+
     // TODO: Need to be separated from GM class (API)
     _fetchUserOptsFromPage() {
-      return (userOpts = {
+      return {
         firstOpt: parseInt(
           document.querySelector('#select-1 input:checked').value
         ),
@@ -476,29 +442,48 @@
         thirdOpts: [
           ...document.querySelectorAll('#select-3 input:checked'),
         ].map((checkbox) => parseInt(checkbox.value)),
+      };
+    }
+
+    saveUserOptsListener(element) {
+      element.addEventListener('click', () => {
+        const userOpts = this._fetchUserOptsFromPage();
+        this.#gm.setUserOpts(userOpts);
+        this.#gm.saveUserOpts();
+      });
+    }
+
+    resetUserOptsListener(element) {
+      element.addEventListener('click', () => {
+        this.#gm.deleteUserOpts();
+        location.reload();
       });
     }
 
     _render() {
-      this._renderBanner();
-      const configBtnHTML = this._configButtonHTML();
-      const runAutoBtnHTML = this._runAutoSurveyButtonHTML();
+      this._insertElement(this._bannerHTML());
       const btnContainer = `
-        <div id="uals-btn-container">
-          ${configBtnHTML}
-          ${runAutoBtnHTML}
+        <div class="uals-btn-container">
+          ${this._configButtonHTML()}
+          ${this._runAutoSurveyButtonHTML()}
         </div>
       `;
       this._insertElement(btnContainer);
-      const configMenu = this._configMenu();
-      this._insertElement(configMenu);
-      const configBtn = document.querySelector('#uals-config-btn');
-      const runAutoBtn = document.querySelector('#uals-run-btn');
-      configBtn.addEventListener('click', this.toggleConfigMenu);
-      runAutoBtn.addEventListener('click', () => {
-        const sm = new SurveyManager(this._getSurveyURLs());
-        sm.run();
-      });
+      this._insertElement(this._configMenuHTML());
+      document
+        .querySelector('#uals-config-btn')
+        .addEventListener('click', this.toggleConfigMenu);
+      this.saveUserOptsListener(
+        document.querySelector('#uals-save-config-btn')
+      );
+      this.resetUserOptsListener(
+        document.querySelector('#uals-reset-config-btn')
+      );
+      document
+        .querySelector('#uals-run-btn')
+        .addEventListener('click', () =>
+          new SurveyManager(this._getSurveyURLs()).run()
+        );
     }
   }
 
