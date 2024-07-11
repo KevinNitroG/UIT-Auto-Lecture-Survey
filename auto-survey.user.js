@@ -49,6 +49,11 @@
   const WINDOW_DONE_MSG = 'surveyDone';
   const WINDOW_DONE_TITLE = 'HOÀN THÀNH KHẢO SÁT';
 
+  /**
+   *
+   * @class
+   * @classdesc GM API to store, get, set css styles.
+   */
   class GM {
     #firstOpt;
     #secondOpts;
@@ -116,6 +121,12 @@
       `);
     }
 
+    setUserOpts(userOpts) {
+      this.#firstOpt = userOpts.firstOpt;
+      this.#secondOpts = userOpts.secondOpts;
+      this.#thirdOpts = userOpts.thirdOpts;
+    }
+
     getUserOpts() {
       return {
         firstOpt: this.#firstOpt,
@@ -161,17 +172,15 @@
       ].map((checkbox) => parseInt(checkbox.value));
     }
 
-    saveUserOptsListener() {
-      const btn = document.querySelector('#uals-save-config-btn');
-      btn.addEventListener('click', () => {
+    saveUserOptsListener(element) {
+      element.addEventListener('click', () => {
         this._fetchUserOptsFromPage();
         this._saveUserOpts();
       });
     }
 
-    resetUserOptsListener() {
-      const btn = document.querySelector('#uals-reset-config-btn');
-      btn.addEventListener('click', () => {
+    resetUserOptsListener(element) {
+      element.addEventListener('click', () => {
         this._deleteUserOpts();
         location.reload();
       });
@@ -262,6 +271,11 @@
     }
   }
 
+  /**
+   *
+   * @class
+   * @classdesc Support automatically fill in forms in Home
+   */
   class SurveyManager {
     #surveys;
     #current;
@@ -269,6 +283,7 @@
     constructor(surveys) {
       this.#surveys = surveys;
       this.#current = 0;
+      this._listenEvent = this._listenEvent.bind(this); // Copilot said me to do this. IDK why :v
     }
 
     _listenEvent(e) {
@@ -313,19 +328,28 @@
     }
   }
 
+  /**
+   *
+   * @class
+   * @classdesc render, mange functions in Home
+   */
   class Home {
-    #position;
+    #container;
     #gm;
+    #saveConfigBtn;
+    #resetConfigBtn;
 
     constructor() {
-      this.#position = this._getPosition();
+      this.#container = this._getContainer();
       this.#gm = new GM();
       this.#gm.addStyles();
       this._render();
       if (!this.#gm.checkUserOpts()) this.toggleConfigMenu();
       else this.#gm.tickOptsToPage();
-      this.#gm.saveUserOptsListener();
-      this.#gm.resetUserOptsListener();
+      this.#saveConfigBtn = document.querySelector('#uals-save-config-btn');
+      this.#resetConfigBtn = document.querySelector('#uals-reset-config-btn');
+      this.#gm.saveUserOptsListener(this.#saveConfigBtn);
+      this.#gm.resetUserOptsListener(this.#resetConfigBtn);
     }
 
     /**
@@ -338,7 +362,7 @@
       );
     }
 
-    _getPosition() {
+    _getContainer() {
       const html = `
         <div id="uals-container">
         </div>
@@ -351,7 +375,7 @@
     }
 
     _insertElement(element) {
-      this.#position.insertAdjacentHTML('beforeend', element);
+      this.#container.insertAdjacentHTML('beforeend', element);
     }
 
     _renderBanner() {
@@ -438,6 +462,21 @@
     toggleConfigMenu() {
       const menuContainer = document.getElementById('uals-menu-container');
       menuContainer.classList.toggle('show');
+    }
+
+    // TODO: Need to be separated from GM class (API)
+    _fetchUserOptsFromPage() {
+      return (userOpts = {
+        firstOpt: parseInt(
+          document.querySelector('#select-1 input:checked').value
+        ),
+        secondOpts: [
+          ...document.querySelectorAll('#select-2 input:checked'),
+        ].map((checkbox) => parseInt(checkbox.value)),
+        thirdOpts: [
+          ...document.querySelectorAll('#select-3 input:checked'),
+        ].map((checkbox) => parseInt(checkbox.value)),
+      });
     }
 
     _render() {
