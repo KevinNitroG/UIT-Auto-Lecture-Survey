@@ -16,7 +16,7 @@ Tự động khảo sát môn học UIT
 ![GitHub closed issues](https://img.shields.io/github/issues-closed/KevinNitroG/UIT-Auto-Lecture-Survey?style=for-the-badge&color=%23ffc6ff)
 ![GitHub repo size](https://img.shields.io/github/repo-size/KevinNitroG/UIT-Auto-Lecture-Survey?style=for-the-badge&color=D8B4F8)
 [![GitHub contributors](https://img.shields.io/github/contributors/KevinNitroG/UIT-Auto-Lecture-Survey?style=for-the-badge&color=FBF0B2)](../../graphs/contributors)
-[![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/KevinNitroG/UIT-Auto-Lecture-Survey?style=for-the-badge)](https://www.codefactor.io/repository/github/kevinnitrog/uit-auto-lecturer-survey)
+[![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/KevinNitroG/UIT-Auto-Lecture-Survey?style=for-the-badge)](https://www.codefactor.io/repository/github/kevinnitrog/uit-auto-lecture-survey)
 [![wakatime](https://wakatime.com/badge/github/KevinNitroG/UIT-Auto-Lecturer-Survey.svg?style=for-the-badge)](https://wakatime.com/badge/github/KevinNitroG/UIT-Auto-Lecturer-Survey)
 
 [![DeepSource](https://app.deepsource.com/gh/KevinNitroG/UIT-Auto-Lecture-Survey.svg/?label=active+issues&show_trend=true&token=af8s5K2DNJnNqcemAWM_beFG)](https://app.deepsource.com/gh/KevinNitroG/UIT-Auto-Lecture-Survey/)
@@ -81,7 +81,7 @@ No!
 
 ### 2️⃣ Cài đặt script
 
-[![auto-survey.user.js](https://img.shields.io/badge/UIT_Auto_Lecturer_Survey-Tampermonkey-a0c4ff?style=for-the-badge)](../../raw/main/src/auto-survey.user.js)
+[![auto-survey.user.js](https://img.shields.io/badge/UIT_Auto_Lecture_Survey-Tampermonkey-a0c4ff?style=for-the-badge)](../../raw/main/src/auto-survey.user.js)
 
 ### 3️⃣ Ấn khảo sát
 
@@ -89,20 +89,21 @@ No!
    - https://link.uit.edu.vn/khaosatmh
    - https://student.uit.edu.vn/sinhvien/phieukhaosat
 2. Config
-   - Ấn `Auto Lecturer Survey` để tự động làm hết khảo sát
+3. Dùng tool _(1 trong 2)_:
+   - Ấn <kbd>Run Auto</kbd> để tự động làm hết khảo sát
    - Ấn từng link khảo sát để làm
 
 > [!NOTE]
 >
-> Nếu muốn tự làm khảo sát thì cần tắt userscript hoặc tắt extension Tampermonkey trước
+> Nếu muốn tự làm khảo sát thì cần tắt Userscript hoặc extension Tampermonkey trước
 
 ### 4️⃣ Tắt script khi không sử dụng
 
-- `Tampermonkey` _(Extension settings)_ > `Dashboard` > `UIT - Auto Lecturer Survey` > Gạt tắt
+- `Tampermonkey` _(Extension settings)_ > `Dashboard` > `UIT - Auto Lecture Survey (UALS)` > Gạt tắt
 
 > [!CAUTION]
 >
-> Vì không rõ các link khảo sát sẽ giống nhau hay không nên thôi tốt nhất tắt khi không sử dụng. Chỉ bật khi làm khảo sát môn học thôi 😇
+> Tắt script để tránh xung đột nếu có các loại khảo sát khác.
 
 ---
 
