@@ -16,9 +16,9 @@
 // @grant           GM_addStyle
 // @grant           GM_openInTab
 // @grant           GM_registerMenuCommand
-// @downloadURL     https://github.com/KevinNitroG/UIT-Auto-Lecturer-Survey/raw/main/UITAutoLecturerSurvey.user.js
-// @updateURL       https://github.com/KevinNitroG/UIT-Auto-Lecturer-Survey/raw/main/UITAutoLecturerSurvey.user.js
-// @supportURL      https://github.com/KevinNitroG/UIT-Auto-Lecturer-Survey/issues
+// @downloadURL     https://github.com/KevinNitroG/UIT-Auto-Lecture-Survey/raw/main/auto-survey.user.js
+// @updateURL       https://github.com/KevinNitroG/UIT-Auto-Lecture-Survey/raw/main/auto-survey.user.js
+// @supportURL      https://github.com/KevinNitroG/UIT-Auto-Lecture-Survey/issues
 // ==/UserScript==
 
 (function () {
