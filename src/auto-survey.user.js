@@ -88,7 +88,7 @@
           border: none;
           color: white;
           margin: 0.4rem 0.3rem;
-          padding: 0.5rem;
+          padding: 0.4rem 0.5rem;
           transition: background-color 0.3s ease-in-out;
         }
 
