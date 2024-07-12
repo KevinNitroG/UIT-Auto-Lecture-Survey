@@ -80,7 +80,7 @@ No!
 
 ### 2️⃣ Cài đặt script
 
-[![auto-survey.user.js](https://img.shields.io/badge/UIT_Auto_Lecture_Survey-Tampermonkey-89b4fa?style=for-the-badge)](../../raw/main/src/auto-survey.user.js)
+[![UALS.user.js](https://img.shields.io/badge/UIT_Auto_Lecture_Survey-Tampermonkey-89b4fa?style=for-the-badge)](../../raw/main/src/UALS.user.js)
 
 ### 3️⃣ Ấn khảo sát
 
