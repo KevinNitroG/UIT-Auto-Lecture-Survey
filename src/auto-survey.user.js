@@ -60,7 +60,7 @@
     #thirdOpts;
 
     constructor() {
-      this.#firstOpt = GM_getValue("firstOpt", 0);
+      this.#firstOpt = GM_getValue("firstOpt", -1);
       this.#secondOpts = GM_getValue("secondOpts", []);
       this.#thirdOpts = GM_getValue("thirdOpts", []);
     }
@@ -149,7 +149,7 @@
 
     checkUserOpts() {
       if (
-        this.#firstOpt === "" ||
+        this.#firstOpt === -1 ||
         this.#secondOpts.length === 0 ||
         this.#thirdOpts.length === 0
       ) {
@@ -486,13 +486,11 @@
     }
   }
 
-  function main() {
+  (function () {
     if (window.location.pathname === "/sinhvien/phieukhaosat") {
       new Home();
     } else {
       new FillInForm();
     }
-  }
-
-  main();
+  })();
 })();
