@@ -142,7 +142,7 @@
     }
 
     deleteUserOpts() {
-      GM_deleteValue("firstOpts");
+      GM_deleteValue("firstOpt");
       GM_deleteValue("secondOpts");
       GM_deleteValue("thirdOpts");
     }
@@ -430,7 +430,6 @@
       }
     }
 
-    // TODO: Need to be separated from GM class (API)
     _fetchUserOptsFromPage() {
       return {
         firstOpt: parseInt(

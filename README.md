@@ -1,4 +1,4 @@
-# ✨ UIT - AUTO LECTURER SURVEY ✨
+# ✨ UIT - AUTO LECTURE SURVEY ✨
 
 <pre align="center">
 ██╗   ██╗███████╗███████╗██████╗ ███████╗ ██████╗██████╗ ██╗██████╗ ████████╗
@@ -11,11 +11,10 @@
 Tự động khảo sát môn học UIT
 </pre>
 
-[![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/KevinNitroG/UIT-Auto-Lecture-Survey?style=for-the-badge&color=CAEDFF)](../../commits/main)
-![GitHub issues](https://img.shields.io/github/issues-raw/KevinNitroG/UIT-Auto-Lecture-Survey?style=for-the-badge&color=ffadad)
-![GitHub closed issues](https://img.shields.io/github/issues-closed/KevinNitroG/UIT-Auto-Lecture-Survey?style=for-the-badge&color=%23ffc6ff)
-![GitHub repo size](https://img.shields.io/github/repo-size/KevinNitroG/UIT-Auto-Lecture-Survey?style=for-the-badge&color=D8B4F8)
-[![GitHub contributors](https://img.shields.io/github/contributors/KevinNitroG/UIT-Auto-Lecture-Survey?style=for-the-badge&color=FBF0B2)](../../graphs/contributors)
+[![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/KevinNitroG/UIT-Auto-Lecture-Survey?style=for-the-badge&color=F2CDCD)](../../commits/main)
+![GitHub issues](https://img.shields.io/github/issues-raw/KevinNitroG/UIT-Auto-Lecture-Survey?style=for-the-badge&color=CBA6F7)
+![GitHub repo size](https://img.shields.io/github/repo-size/KevinNitroG/UIT-Auto-Lecture-Survey?style=for-the-badge&color=EBA0AC)
+[![GitHub contributors](https://img.shields.io/github/contributors/KevinNitroG/UIT-Auto-Lecture-Survey?style=for-the-badge&color=FAB387)](../../graphs/contributors)
 [![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/KevinNitroG/UIT-Auto-Lecture-Survey?style=for-the-badge)](https://www.codefactor.io/repository/github/kevinnitrog/uit-auto-lecture-survey)
 [![wakatime](https://wakatime.com/badge/github/KevinNitroG/UIT-Auto-Lecturer-Survey.svg?style=for-the-badge)](https://wakatime.com/badge/github/KevinNitroG/UIT-Auto-Lecturer-Survey)
 
@@ -24,7 +23,7 @@ Tự động khảo sát môn học UIT
 
 > [!NOTE]
 >
-> Đây gọi là script _(userscript)_, không phải là tool!
+> Đây gọi là script _(userscript)_, không phải tool!
 
 ---
 
@@ -73,15 +72,15 @@ No!
 
 ### 1️⃣ Cài đặt extension Tampermonkey
 
-- [![Chrome](https://img.shields.io/badge/Chrome-ffc6ff?style=for-the-badge&logo=googlechrome&logoColor=white)](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
-- [![Microsoft Edge](https://img.shields.io/badge/Edge-a0c4ff?style=for-the-badge&logo=microsoftedge&logoColor=white)](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd)
-- [![Safari](https://img.shields.io/badge/Safari-bdb2ff?style=for-the-badge&logo=safari&logoColor=white)](https://apps.apple.com/us/app/tampermonkey/id1482490089)
-- [![Firefox](https://img.shields.io/badge/Firefox-%23ffd6a5?style=for-the-badge&logo=firefoxbrowser&logoColor=white)](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
-- [![Opera](https://img.shields.io/badge/Opera-ffadad?style=for-the-badge&logo=opera&logoColor=white)](https://addons.opera.com/en/extensions/details/tampermonkey-beta/)
+- [![Chrome](https://img.shields.io/badge/Chrome-f5e0dc?style=for-the-badge&logo=googlechrome&logoColor=white)](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
+- [![Firefox](https://img.shields.io/badge/Firefox-f5c2e7?style=for-the-badge&logo=firefoxbrowser&logoColor=white)](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
+- [![Microsoft Edge](https://img.shields.io/badge/Edge-cba6f7?style=for-the-badge&logo=microsoftedge&logoColor=white)](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd)
+- [![Opera](https://img.shields.io/badge/Opera-eba0ac?style=for-the-badge&logo=opera&logoColor=white)](https://addons.opera.com/en/extensions/details/tampermonkey-beta/)
+- [![Safari](https://img.shields.io/badge/Safari-fab387?style=for-the-badge&logo=safari&logoColor=white)](https://apps.apple.com/us/app/tampermonkey/id1482490089)
 
 ### 2️⃣ Cài đặt script
 
-[![auto-survey.user.js](https://img.shields.io/badge/UIT_Auto_Lecture_Survey-Tampermonkey-a0c4ff?style=for-the-badge)](../../raw/main/src/auto-survey.user.js)
+[![auto-survey.user.js](https://img.shields.io/badge/UIT_Auto_Lecture_Survey-Tampermonkey-89b4fa?style=for-the-badge)](../../raw/main/src/auto-survey.user.js)
 
 ### 3️⃣ Ấn khảo sát
 
@@ -95,21 +94,24 @@ No!
 
 > [!NOTE]
 >
-> Cần tắt Userscript hoặc extension Tampermonkey nếu muốn khảo sát thủ công
+> Tắt Userscript hoặc extension Tampermonkey nếu muốn khảo sát thủ công
 
 ### 4️⃣ Tắt script khi không sử dụng
 
-- `Tampermonkey` _(Extension settings)_ > `Dashboard` > `UIT - Auto Lecture Survey (UALS)` > Gạt tắt
+1. `Tampermonkey` _(Extension settings)_
+2. `Dashboard`
+3. `UIT - Auto Lecture Survey (UALS)`
+4. Gạt tắt
 
 > [!CAUTION]
 >
-> Tắt script để tránh xung đột nếu có các loại khảo sát khác
+> Tắt script để tránh xung đột nếu có các khảo sát loại khác
 
 ---
 
 ## 📝 LICENSE
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-9bf6ff?style=for-the-badge)](./LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-b4befe?style=for-the-badge)](./LICENSE)
 
 ---
 
