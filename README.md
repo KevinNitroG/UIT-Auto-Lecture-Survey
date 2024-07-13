@@ -1,14 +1,14 @@
 # ✨ UIT - AUTO LECTURE SURVEY ✨
 
 <pre align="center">
-██╗   ██╗███████╗███████╗██████╗ ███████╗ ██████╗██████╗ ██╗██████╗ ████████╗
-██║   ██║██╔════╝██╔════╝██╔══██╗██╔════╝██╔════╝██╔══██╗██║██╔══██╗╚══██╔══╝
-██║   ██║███████╗█████╗  ██████╔╝███████╗██║     ██████╔╝██║██████╔╝   ██║   
-██║   ██║╚════██║██╔══╝  ██╔══██╗╚════██║██║     ██╔══██╗██║██╔═══╝    ██║   
-╚██████╔╝███████║███████╗██║  ██║███████║╚██████╗██║  ██║██║██║        ██║   
- ╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝╚═╝        ╚═╝   
-<strong>UIT - AUTO LECTURE SURVEY</strong> <em>(UALS)</em>
-Tự động khảo sát môn học UIT
+██╗   ██╗ █████╗ ██╗     ███████╗
+██║   ██║██╔══██╗██║     ██╔════╝
+██║   ██║███████║██║     ███████╗
+██║   ██║██╔══██║██║     ╚════██║
+╚██████╔╝██║  ██║███████╗███████║
+ ╚═════╝ ╚═╝  ╚═╝╚══════╝╚══════╝
+<strong>UIT - AUTO LECTURE SURVEY</strong>
+Script tự động khảo sát môn học UIT
 </pre>
 
 [![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/KevinNitroG/UIT-Auto-Lecture-Survey?style=for-the-badge&color=F2CDCD)](../../commits/main)
@@ -21,9 +21,9 @@ Tự động khảo sát môn học UIT
 [![DeepSource](https://app.deepsource.com/gh/KevinNitroG/UIT-Auto-Lecture-Survey.svg/?label=active+issues&show_trend=true&token=af8s5K2DNJnNqcemAWM_beFG)](https://app.deepsource.com/gh/KevinNitroG/UIT-Auto-Lecture-Survey/)
 [![DeepSource](https://app.deepsource.com/gh/KevinNitroG/UIT-Auto-Lecture-Survey.svg/?label=resolved+issues&show_trend=true&token=af8s5K2DNJnNqcemAWM_beFG)](https://app.deepsource.com/gh/KevinNitroG/UIT-Auto-Lecture-Survey/)
 
-> [!NOTE]
+> [!IMPORTANT]
 >
-> Đây gọi là script _(userscript)_, không phải tool!
+> Đây là script _(userscript cài đặt qua Tampermonkey)_, không phải tool!
 
 ---
 
@@ -80,7 +80,7 @@ No!
 
 ### 2️⃣ Cài đặt script
 
-[![UALS.user.js](https://img.shields.io/badge/UIT_Auto_Lecture_Survey-Tampermonkey-89b4fa?style=for-the-badge)](../../raw/main/src/UALS.user.js)
+[![UALS.user.js](https://img.shields.io/badge/UALS-Tampermonkey_Userscript-89b4fa?style=for-the-badge)](../../raw/main/src/UALS.user.js)
 
 ### 3️⃣ Ấn khảo sát
 
@@ -88,7 +88,7 @@ No!
    - https://link.uit.edu.vn/khaosatmh
    - https://student.uit.edu.vn/sinhvien/phieukhaosat
 2. Config
-3. Dùng tool _(1 trong 2)_:
+3. Sử dụng _(1 trong 2)_:
    - Ấn `Run Auto` để tự động làm hết khảo sát
    - Ấn từng link khảo sát để làm
 
@@ -103,7 +103,7 @@ No!
 3. `UIT - Auto Lecture Survey (UALS)`
 4. Gạt tắt
 
-> [!CAUTION]
+> [!IMPORTANT]
 >
 > Tắt script để tránh xung đột nếu có các khảo sát loại khác
 
