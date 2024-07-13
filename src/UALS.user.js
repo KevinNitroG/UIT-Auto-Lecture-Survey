@@ -382,7 +382,7 @@
     }
 
     _configMenuHTML() {
-      let html = `
+      return `
         <div id="uals-menu-container">
           <div class="uals-question-container">
             <h3 id="uals-menu-header">Chọn câu trả lời cho form loại 1</h3>
@@ -428,7 +428,6 @@
           </div>
         </div>
       `;
-      return html;
     }
 
     _toggleConfigMenu() {
