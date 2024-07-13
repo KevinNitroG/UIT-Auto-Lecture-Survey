@@ -47,7 +47,7 @@
     "answer_cell_00MH04.answer-item.radio-item",
   ];
 
-  const WINDOW_DONE_MSG = "AULS - Done form";
+  const WINDOW_DONE_MSG = "AULS - Done a survey";
   const WINDOW_DONE_TITLE = "HOÀN THÀNH KHẢO SÁT";
 
   const STYLE = `
@@ -103,11 +103,6 @@
     }
   `;
 
-  /**
-   *
-   * @class
-   * @classdesc GM API to store, get, set value and CSS styles.
-   */
   class Model {
     #firstOpt;
     #secondOpts;
@@ -167,7 +162,7 @@
     }
   }
 
-  class FillInForm {
+  class FillSurvey {
     #firstOpt;
     #secondOpts;
     #thirdOpts;
@@ -189,8 +184,8 @@
     }
 
     // TODO: WIP. Check this again. Be careful of value and index. It should be value
-    /** Fill in the first type form */
-    _firstForm() {
+    /** Fill in the first type */
+    _firstType() {
       const labels = document.querySelectorAll("label.answertext");
       for (const label of labels) {
         if (label.innerText.trim() === this.#firstOpt) label.click();
@@ -198,12 +193,12 @@
     }
 
     // TODO: WIP. Find questions and each in question, select 1 random.
-    /** Fill in the second type form */
-    _secondForm() {
+    /** Fill in the second type */
+    _secondType() {
       // const labels = document.querySelectorAll('label.answertext');
     }
 
-    _thirdForm() {
+    _thirdType() {
       const questions = document.querySelectorAll(".answers-list.radio-list");
       if (questions.length === 0) return false;
       for (const question of questions) {
@@ -232,19 +227,14 @@
     _run() {
       this._done();
       let check = false;
-      check = this._firstForm() || check;
-      check = this._secondForm() || check;
-      check = this._thirdForm() || check;
+      check = this._firstType() || check;
+      check = this._secondType() || check;
+      check = this._thirdType() || check;
       if (check) this._submit();
     }
   }
 
-  /**
-   *
-   * @class
-   * @classdesc Support automatically fill in forms in Home
-   */
-  class SurveyManager {
+  class AutoRun {
     #surveys;
     #current;
 
@@ -309,10 +299,7 @@
     addHandler() {
       document
         .querySelector("#uals-run-btn")
-        .addEventListener(
-          "click",
-          () => new SurveyManager(this._getSurveyURLs()),
-        );
+        .addEventListener("click", () => new AutoRun(this._getSurveyURLs()));
     }
   }
 
@@ -351,7 +338,7 @@
       return `
         <div id="uals-menu-container">
           <div class="uals-question-container">
-            <h3 id="uals-menu-header">Chọn câu trả lời cho form loại 1</h3>
+            <h3 id="uals-menu-header">Chọn câu trả lời cho câu hỏi loại 1</h3>
             <form id="select-1">
               ${FIRST_SELECTIONS.map(
                 (val, i) =>
@@ -363,7 +350,7 @@
             </form>
           </div>
           <div class="uals-question-container">
-            <h3 id="uals-menu-header">Chọn câu trả lời cho form loại 2</h3>
+            <h3 id="uals-menu-header">Chọn câu trả lời cho câu hỏi loại 2</h3>
             <form id="select-2">
               ${SECOND_SELECTIONS.map(
                 (val, i) =>
@@ -376,7 +363,7 @@
           </div>
           <div class="uals-question-container">
             <h3 id="uals-menu-header">
-              Chọn câu trả lời cho form loại 3 (mức độ hài lòng)
+              Chọn câu trả lời cho câu hỏi loại 3 (mức độ hài lòng)
             </h3>
             <form id="select-3">
               ${THIRD_SELECTIONS.map(
@@ -531,11 +518,6 @@
     }
   }
 
-  /**
-   *
-   * @class
-   * @classdesc Render, manage functions in Home
-   */
   class Controller {
     #view;
 
@@ -554,7 +536,7 @@
     }
 
     _AutoSurvey() {
-      new SurveyManager(this._getSurveyURLs());
+      new AutoRun(this._getSurveyURLs());
     }
   }
 
@@ -562,7 +544,7 @@
     if (window.location.pathname === "/sinhvien/phieukhaosat") {
       new Controller();
     } else {
-      new FillInForm();
+      new FillSurvey();
     }
   };
 
