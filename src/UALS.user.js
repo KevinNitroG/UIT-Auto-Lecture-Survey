@@ -342,23 +342,43 @@
     }
 
     _bannerHTML() {
-      return `<h2 align="center" style="margin: auto;">UIT - Auto Lecture Survey - Kevin Nitro</h2>`;
+      return `
+        <h2 align="center" style="margin: auto;">
+          UIT - Auto Lecture Survey - Kevin Nitro
+        </h2>
+      `;
     }
 
     _runAutoSurveyButtonHTML() {
-      return `<button class="uals-btn" id="uals-run-btn">Run Auto</button>`;
+      return `
+        <button class="uals-btn" id="uals-run-btn">
+          Run Auto
+        </button>
+      `;
     }
 
     _configButtonHTML() {
-      return `<button class="uals-btn" id="uals-config-btn">Config</button>`;
+      return `
+        <button class="uals-btn" id="uals-config-btn">
+          Config
+        </button>
+      `;
     }
 
     _saveConfigButtonHTML() {
-      return `<button class="uals-btn" id="uals-save-config-btn">Save</button>`;
+      return `
+        <button class="uals-btn" id="uals-save-config-btn">
+          Save
+        </button>
+      `;
     }
 
     _resetConfigButtonHTML() {
-      return `<button class="uals-btn" id="uals-reset-config-btn">Reset</button>`;
+      return `
+        <button class="uals-btn" id="uals-reset-config-btn">
+          Reset
+        </button>
+      `;
     }
 
     _configMenuHTML() {
@@ -367,46 +387,39 @@
           <div class="uals-question-container">
             <h3 id="uals-menu-header">Chọn câu trả lời cho form loại 1</h3>
             <form id="select-1">
-        `;
-      for (let i = 0; i < FIRST_SELECTIONS.length; i++) {
-        html += `
-                <input type="radio" name="select-1" id="select-1-${i}" value="${i}">
-                <label for="select-1-${i}">${FIRST_SELECTIONS[i]}</label>
-          `;
-      }
-      html += `
+              ${FIRST_SELECTIONS.map(
+                (val, i) =>
+                  `
+                    <input type="radio" name="select-1" id="select-1-${i}" value="${i}">
+                    <label for="select-1-${i}">${val}</label>
+                  `,
+              ).join("")}
             </form>
           </div>
-        `;
-      html += `
           <div class="uals-question-container">
             <h3 id="uals-menu-header">Chọn câu trả lời cho form loại 2</h3>
             <form id="select-2">
-        `;
-      for (let i = 0; i < SECOND_SELECTIONS.length; i++) {
-        html += `
-              <input type="checkbox" name="select-2" id="select-2-${i}" value="${i}" />
-              <label for="select-2-${i}">${SECOND_SELECTIONS[i]}</label>
-          `;
-      }
-      html += `
+              ${SECOND_SELECTIONS.map(
+                (val, i) =>
+                  `
+                  <input type="checkbox" name="select-2" id="select-2-${i}" value="${i}" />
+                  <label for="select-2-${i}">${val}</label>
+                `,
+              ).join("")}
             </form>
           </div>
-        `;
-      html += `
           <div class="uals-question-container">
             <h3 id="uals-menu-header">
               Chọn câu trả lời cho form loại 3 (mức độ hài lòng)
             </h3>
             <form id="select-3">
-        `;
-      for (let i = 0; i < THIRD_SELECTIONS.length; i++) {
-        html += `
-              <input type="checkbox" name="select-3" id="select-3-${i}" value="${i}" />
-              <label for="select-3-${i}">Mức ${i + 1}</label>
-          `;
-      }
-      html += `
+              ${THIRD_SELECTIONS.map(
+                (_, i) =>
+                  `
+                  <input type="checkbox" name="select-3" id="select-3-${i}" value="${i}" />
+                  <label for="select-3-${i}">Mức ${i + 1}</label>
+                `,
+              ).join("")}
             </form>
           </div>
           <div class="uals-btn-container">
@@ -414,7 +427,7 @@
             ${this._saveConfigButtonHTML()}
           </div>
         </div>
-        `;
+      `;
       return html;
     }
 
@@ -491,9 +504,7 @@
           this._renderConfigMenu();
           this._tickOptsToPage();
         },
-        {
-          once: true,
-        },
+        { once: true },
       );
       configBtn.addEventListener("click", this._toggleConfigMenu);
       document
