@@ -50,12 +50,65 @@
   const WINDOW_DONE_MSG = "AULS - Done form";
   const WINDOW_DONE_TITLE = "HOÀN THÀNH KHẢO SÁT";
 
+  const STYLE = `
+    #uals-container {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      // border: solid #115d9d 0.05rem;
+    }
+
+    .uals-btn-container {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+    }
+
+    .uals-btn {
+      background-color: #115d9d;
+      border-radius: 0.5rem;
+      border: none;
+      color: white;
+      margin: 0.4rem 0.3rem;
+      padding: 0.4rem 0.5rem;
+      transition: background-color 0.3s ease-in-out;
+    }
+
+    .uals-btn:hover {
+      background-color: #1678cb;
+    }
+
+    #uals-menu-container {
+      display: none;
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    #uals-menu-container.show {
+      display: inline-block;
+      opacity: 1;
+      visibility: visible;
+    }
+
+    #select-1, #select-2, #select-3 {
+      align-items: center;
+      display: flex;
+      flex-direction: row;
+    }
+
+    #select-1 > label, #select-2 > label, #select-3 > label {
+      margin: auto 10px;
+      vertical-align: middle;
+    }
+  `;
+
   /**
    *
    * @class
    * @classdesc GM API to store, get, set value and CSS styles.
    */
-  class GM {
+  class Model {
     #firstOpt;
     #secondOpts;
     #thirdOpts;
@@ -67,58 +120,7 @@
     }
 
     addStyles() {
-      GM_addStyle(`
-        #uals-container {
-          align-items: center;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          border: solid #115d9d 0.05rem;
-        }
-
-        .uals-btn-container {
-          align-items: center;
-          display: flex;
-          justify-content: center;
-        }
-
-        .uals-btn {
-          background-color: #115d9d;
-          border-radius: 0.5rem;
-          border: none;
-          color: white;
-          margin: 0.4rem 0.3rem;
-          padding: 0.4rem 0.5rem;
-          transition: background-color 0.3s ease-in-out;
-        }
-
-        .uals-btn:hover {
-          background-color: #1678cb;
-        }
-
-        #uals-menu-container {
-          display: none;
-          opacity: 0;
-          visibility: hidden;
-        }
-
-        #uals-menu-container.show {
-          display: inline-block;
-          opacity: 1;
-          visibility: visible;
-        }
-
-        #select-1, #select-2, #select-3 {
-          align-items: center;
-          display: flex;
-          flex-direction: row;
-        }
-
-        #select-1 > label, #select-2 > label, #select-3 > label {
-          margin: auto 10px;
-          vertical-align: middle;
-        }
-      `);
+      GM_addStyle(STYLE);
     }
 
     setUserOpts(userOpts) {
@@ -148,7 +150,7 @@
       }
     }
 
-    checkUserOpts() {
+    checkUserOptsExist() {
       if (
         this.#firstOpt === -1 ||
         this.#secondOpts.length === 0 ||
@@ -171,7 +173,7 @@
     #thirdOpts;
 
     constructor() {
-      const { firstOpt, secondOpts, thirdOpts } = new GM().getUserOpts();
+      const { firstOpt, secondOpts, thirdOpts } = new Model().getUserOpts();
       this.#firstOpt = firstOpt;
       this.#secondOpts = secondOpts;
       this.#thirdOpts = thirdOpts;
@@ -295,61 +297,8 @@
     }
   }
 
-  /**
-   *
-   * @class
-   * @classdesc Render, manage functions in Home
-   */
-  class Home {
-    #container;
-    #gm;
-
-    constructor() {
-      this.#container = this._getContainer();
-      this.#gm = new GM();
-      this.#gm.addStyles();
-      this._render();
-      if (!this.#gm.checkUserOpts()) {
-        this._renderConfigMenu();
-        this._toggleConfigMenu();
-        this._tickOptsToPage();
-      }
-    }
-
-    /**
-     * @returns {string[]} An array of survey URLs
-     */
-    _getSurveyURLs() {
-      const urls = [...document.querySelectorAll("table a")];
-      return urls.filter((url) =>
-        url.innerHTML.includes("khảo sát về môn học"),
-      );
-    }
-
-    _getContainer() {
-      const html = `
-        <div id="uals-container">
-        </div>
-      `;
-      const position = document.querySelector("#content .content");
-      position.insertAdjacentHTML("afterbegin", html);
-      const container = position.querySelector("#uals-container");
-      return container;
-    }
-
-    _insertElement(element) {
-      this.#container.insertAdjacentHTML("beforeend", element);
-    }
-
-    _bannerHTML() {
-      return `
-        <h2 align="center" style="margin: auto;">
-          UIT - Auto Lecture Survey - Kevin Nitro
-        </h2>
-      `;
-    }
-
-    _runAutoSurveyButtonHTML() {
+  class ViewRunAuto {
+    btnHTML() {
       return `
         <button class="uals-btn" id="uals-run-btn">
           Run Auto
@@ -357,7 +306,24 @@
       `;
     }
 
-    _configButtonHTML() {
+    addHandler() {
+      document
+        .querySelector("#uals-run-btn")
+        .addEventListener(
+          "click",
+          () => new SurveyManager(this._getSurveyURLs()),
+        );
+    }
+  }
+
+  class ViewConfig {
+    #model;
+
+    constructor(model) {
+      this.#model = model;
+    }
+
+    btnHTML() {
       return `
         <button class="uals-btn" id="uals-config-btn">
           Config
@@ -381,7 +347,7 @@
       `;
     }
 
-    _configMenuHTML() {
+    configMenuHTML() {
       return `
         <div id="uals-menu-container">
           <div class="uals-question-container">
@@ -430,12 +396,12 @@
       `;
     }
 
-    _toggleConfigMenu() {
+    toggleConfigMenu() {
       document.querySelector("#uals-menu-container")?.classList.toggle("show");
     }
 
-    _tickOptsToPage() {
-      const { firstOpt, secondOpts, thirdOpts } = this.#gm.getUserOpts();
+    tickOptsToPage(userOpts) {
+      const { firstOpt, secondOpts, thirdOpts } = userOpts;
       document
         .querySelector(`#select-1 input[id="select-1-${firstOpt}"]`)
         ?.click();
@@ -461,65 +427,144 @@
       };
     }
 
-    _saveUserOptsListener(element) {
-      element.addEventListener("click", () => {
+    _saveUserOptsHandler(handler) {
+      handler.addEventListener("click", () => {
         const userOpts = this._fetchUserOptsFromPage();
-        this.#gm.setUserOpts(userOpts);
-        this.#gm.saveUserOpts();
-        this._toggleConfigMenu();
+        this.#model.setUserOpts(userOpts);
+        this.#model.saveUserOpts();
+        this.toggleConfigMenu();
       });
     }
 
-    _resetUserOptsListener(element) {
-      element.addEventListener("click", () => {
-        this.#gm.deleteUserOpts();
+    _resetUserOptsHandler(handler) {
+      handler.addEventListener("click", () => {
+        this.#model.deleteUserOpts();
         location.reload();
       });
     }
 
-    _renderConfigMenu() {
-      this._insertElement(this._configMenuHTML());
-      this._saveUserOptsListener(
+    addHandlers(preRender) {
+      const configBtn = document.querySelector("#uals-config-btn");
+      configBtn.addEventListener(
+        "click",
+        () => {
+          preRender();
+          this.tickOptsToPage(this.#model.getUserOpts());
+        },
+        {
+          once: true,
+        },
+      );
+      configBtn.addEventListener("click", this.toggleConfigMenu);
+    }
+
+    addLazyHandlers() {
+      this._saveUserOptsHandler(
         document.querySelector("#uals-save-config-btn"),
       );
-      this._resetUserOptsListener(
+      this._resetUserOptsHandler(
         document.querySelector("#uals-reset-config-btn"),
       );
+    }
+  }
+
+  class View {
+    #container;
+    #model;
+    #viewRunAuto;
+    #viewConfig;
+
+    constructor() {
+      this.#container = this._getContainer();
+      this.#model = new Model();
+      this.#viewRunAuto = new ViewRunAuto();
+      this.#viewConfig = new ViewConfig(this.#model);
+      this.#model.addStyles();
+      this._render();
+      this._addHandlers();
+      if (!this.#model.checkUserOptsExist())
+        document.querySelector("#uals-config-btn").click();
+    }
+
+    _getContainer() {
+      const html = `
+        <div id="uals-container">
+        </div>
+      `;
+      const position = document.querySelector("#content .content");
+      position.insertAdjacentHTML("afterbegin", html);
+      const container = position.querySelector("#uals-container");
+      return container;
+    }
+
+    _insertElement(element) {
+      this.#container.insertAdjacentHTML("beforeend", element);
+    }
+
+    _bannerHTML() {
+      return `
+        <h2 align="center" style="margin: auto;">
+          UIT - Auto Lecture Survey - Kevin Nitro
+        </h2>
+      `;
+    }
+
+    _renderConfigMenu() {
+      this._insertElement(this.#viewConfig.configMenuHTML());
+      this.#viewConfig.addLazyHandlers();
     }
 
     _render() {
       this._insertElement(this._bannerHTML());
       const btnContainer = `
         <div class="uals-btn-container">
-          ${this._configButtonHTML()}
-          ${this._runAutoSurveyButtonHTML()}
+          ${this.#viewConfig.btnHTML()}
+          ${this.#viewRunAuto.btnHTML()}
         </div>
       `;
       this._insertElement(btnContainer);
-      const configBtn = document.querySelector("#uals-config-btn");
-      configBtn.addEventListener(
-        "click",
-        () => {
-          this._renderConfigMenu();
-          this._tickOptsToPage();
-        },
-        { once: true },
-      );
-      configBtn.addEventListener("click", this._toggleConfigMenu);
-      document
-        .querySelector("#uals-run-btn")
-        .addEventListener(
-          "click",
-          () => new SurveyManager(this._getSurveyURLs()),
-        );
+    }
+
+    _addHandlers() {
+      this.#viewConfig.addHandlers(() => this._renderConfigMenu());
+      this.#viewRunAuto.addHandler();
     }
   }
 
-  (function () {
+  /**
+   *
+   * @class
+   * @classdesc Render, manage functions in Home
+   */
+  class Controller {
+    #view;
+
+    constructor() {
+      this.#view = new View();
+      this.#view;
+    }
+    /**
+     * @returns {string[]} An array of survey URLs
+     */
+    _getSurveyURLs() {
+      const urls = [...document.querySelectorAll("table a")];
+      return urls.filter((url) =>
+        url.innerHTML.includes("khảo sát về môn học"),
+      );
+    }
+
+    _AutoSurvey() {
+      new SurveyManager(this._getSurveyURLs());
+    }
+  }
+
+  const init = function () {
     if (window.location.pathname === "/sinhvien/phieukhaosat") {
-      new Home();
+      new Controller();
     } else {
       new FillInForm();
     }
-  })();
+  };
+
+  init();
 })();
