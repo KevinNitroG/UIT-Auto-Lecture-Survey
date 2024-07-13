@@ -491,7 +491,9 @@
     _bannerHTML() {
       return `
         <h2 align="center" style="margin: auto;">
-          UIT - Auto Lecture Survey - Kevin Nitro
+          <a href="https://github.com/KevinNitroG/UIT-Auto-Lecture-Survey" target="_blank">
+            UIT - Auto Lecture Survey
+          </a>
         </h2>
       `;
     }
