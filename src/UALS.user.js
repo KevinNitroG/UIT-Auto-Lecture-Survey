@@ -98,7 +98,8 @@
     }
 
     #select-1 > label, #select-2 > label, #select-3 > label {
-      margin: auto 10px;
+      margin: 0 0.5rem 0 0;
+      padding: 0 0.5rem 0 0.5rem;
       vertical-align: middle;
     }
   `;
@@ -296,10 +297,10 @@
       `;
     }
 
-    addHandler() {
+    addHandler(getSurveyURLsFunc) {
       document
         .querySelector("#uals-run-btn")
-        .addEventListener("click", () => new AutoRun(this._getSurveyURLs()));
+        .addEventListener("click", () => new AutoRun(getSurveyURLsFunc()));
     }
   }
 
@@ -387,8 +388,8 @@
       document.querySelector("#uals-menu-container")?.classList.toggle("show");
     }
 
-    tickOptsToPage(userOpts) {
-      const { firstOpt, secondOpts, thirdOpts } = userOpts;
+    tickOptsToPage() {
+      const { firstOpt, secondOpts, thirdOpts } = this.#model.getUserOpts();
       document
         .querySelector(`#select-1 input[id="select-1-${firstOpt}"]`)
         ?.click();
@@ -436,7 +437,7 @@
         "click",
         () => {
           preRender();
-          this.tickOptsToPage(this.#model.getUserOpts());
+          this.tickOptsToPage();
         },
         {
           once: true,
@@ -471,6 +472,13 @@
       this._addHandlers();
       if (!this.#model.checkUserOptsExist())
         document.querySelector("#uals-config-btn").click();
+    }
+
+    static _getSurveyURLs() {
+      const urls = [...document.querySelectorAll("table a")];
+      return urls.filter((url) =>
+        url.innerHTML.includes("khảo sát về môn học"),
+      );
     }
 
     _getContainer() {
@@ -516,7 +524,7 @@
 
     _addHandlers() {
       this.#viewConfig.addHandlers(() => this._renderConfigMenu());
-      this.#viewRunAuto.addHandler();
+      this.#viewRunAuto.addHandler(() => View._getSurveyURLs());
     }
   }
 
@@ -527,27 +535,11 @@
       this.#view = new View();
       this.#view;
     }
-    /**
-     * @returns {string[]} An array of survey URLs
-     */
-    _getSurveyURLs() {
-      const urls = [...document.querySelectorAll("table a")];
-      return urls.filter((url) =>
-        url.innerHTML.includes("khảo sát về môn học"),
-      );
-    }
-
-    _AutoSurvey() {
-      new AutoRun(this._getSurveyURLs());
-    }
   }
 
   const init = function () {
-    if (window.location.pathname === "/sinhvien/phieukhaosat") {
-      new Controller();
-    } else {
-      new FillSurvey();
-    }
+    if (window.location.pathname === "/sinhvien/phieukhaosat") new Controller();
+    else new FillSurvey();
   };
 
   init();
