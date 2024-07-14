@@ -26,26 +26,26 @@
 (function () {
   "use strict";
 
-  const FIRST_SELECTIONS = [
-    "<50%",
-    "50-80%",
-    ">80%",
-    "Không biết chuẩn đầu ra là gì",
-  ];
-
-  const SECOND_SELECTIONS = [
-    "Dưới 50%",
-    "Từ 50 đến dưới 70%",
-    "Từ 70 đến dưới 90%",
-    "Trên 90%",
-  ];
-
-  const THIRD_SELECTIONS = [
-    "answer_cell_00MH01.answer-item.radio-item",
-    "answer_cell_00MH02.answer-item.radio-item",
-    "answer_cell_00MH03.answer-item.radio-item",
-    "answer_cell_00MH04.answer-item.radio-item",
-  ];
+  const SELECTIONS = {
+    firstOpts: {
+      1: "<50%",
+      2: "50-80%",
+      3: ">80%",
+      4: "Không biết chuẩn đầu ra là gì",
+    },
+    secondOpts: {
+      1: "Dưới 50%",
+      2: "Từ 50 đến dưới 70%",
+      3: "Từ 70 đến dưới 90%",
+      4: "Trên 90%",
+    },
+    thirdOpts: {
+      1: "answer_cell_00MH01.answer-item.radio-item",
+      2: "answer_cell_00MH02.answer-item.radio-item",
+      3: "answer_cell_00MH03.answer-item.radio-item",
+      4: "answer_cell_00MH04.answer-item.radio-item",
+    },
+  };
 
   const WINDOW_DONE_MSG = "AULS - Done a survey";
   const WINDOW_DONE_TITLE = "HOÀN THÀNH KHẢO SÁT";
@@ -105,14 +105,14 @@
   `;
 
   class Model {
-    #firstOpt;
+    #firstOpts;
     #secondOpts;
     #thirdOpts;
 
     constructor() {
-      this.#firstOpt = GM_getValue("firstOpt", -1);
-      this.#secondOpts = GM_getValue("secondOpts", []);
-      this.#thirdOpts = GM_getValue("thirdOpts", []);
+      this.#firstOpts = GM_getValue("userFirstOpts", []);
+      this.#secondOpts = GM_getValue("userSecondOpts", []);
+      this.#thirdOpts = GM_getValue("userThirdOpts", []);
     }
 
     addStyles() {
@@ -120,23 +120,23 @@
     }
 
     setUserOpts(userOpts) {
-      this.#firstOpt = userOpts.firstOpt;
+      this.#firstOpts = userOpts.firstOpts;
       this.#secondOpts = userOpts.secondOpts;
       this.#thirdOpts = userOpts.thirdOpts;
     }
 
     getUserOpts() {
       return {
-        firstOpt: this.#firstOpt,
+        firstOpts: this.#firstOpts,
         secondOpts: this.#secondOpts,
         thirdOpts: this.#thirdOpts,
       };
     }
 
     saveUserOpts() {
-      GM_setValue("firstOpt", this.#firstOpt);
-      GM_setValue("secondOpts", this.#secondOpts);
-      GM_setValue("thirdOpts", this.#thirdOpts);
+      GM_setValue("userFirstOpts", this.#firstOpts);
+      GM_setValue("userSecondOpts", this.#secondOpts);
+      GM_setValue("userThirdOpts", this.#thirdOpts);
     }
 
     deleteUserOpts() {
@@ -148,7 +148,7 @@
 
     checkUserOptsExist() {
       if (
-        this.#firstOpt === -1 ||
+        this.#firstOpts.length === 0 ||
         this.#secondOpts.length === 0 ||
         this.#thirdOpts.length === 0
       ) {
@@ -163,25 +163,26 @@
     }
   }
 
-  class FillSurvey {
-    #firstOpt;
+  class DoSurvey {
+    #firstOpts;
     #secondOpts;
     #thirdOpts;
 
     constructor() {
-      const { firstOpt, secondOpts, thirdOpts } = new Model().getUserOpts();
-      this.#firstOpt = firstOpt;
+      const {
+        firstOpt: firstOpts,
+        secondOpts,
+        thirdOpts,
+      } = new Model().getUserOpts();
+      this.#firstOpts = firstOpts;
       this.#secondOpts = secondOpts;
       this.#thirdOpts = thirdOpts;
       this._run();
     }
 
-    /**
-     * @param {number} max Right limit of random number.
-     * @returns {number} Random number from [0, max - 1]
-     */
-    static _genRanInt(max) {
-      return Math.floor(Math.random() * max);
+    static getRandomElement(array) {
+      const randomIndex = Math.floor(Math.random() * array.length);
+      return array[randomIndex];
     }
 
     // TODO: WIP. Check this again. Be careful of value and index. It should be value
@@ -189,7 +190,7 @@
     _firstType() {
       const labels = document.querySelectorAll("label.answertext");
       for (const label of labels) {
-        if (label.innerText.trim() === this.#firstOpt) label.click();
+        if (label.innerText.trim() === this.#firstOpts) label.click();
       }
     }
 
@@ -203,8 +204,9 @@
       const questions = document.querySelectorAll(".answers-list.radio-list");
       if (questions.length === 0) return false;
       for (const question of questions) {
-        const randomIndex = this._genRanInt(this.#thirdOpts.length);
-        question.querySelector(this.#thirdOpts[randomIndex]).click();
+        question
+          .querySelector(SELECTIONS[DoSurvey.getRandomElement(this.#thirdOpts)])
+          .click();
       }
       return true;
     }
@@ -341,25 +343,29 @@
           <div class="uals-question-container">
             <h3 id="uals-menu-header">Chọn câu trả lời cho câu hỏi loại 1</h3>
             <form id="select-1">
-              ${FIRST_SELECTIONS.map(
-                (val, i) =>
-                  `
-                    <input type="radio" name="select-1" id="select-1-${i}" value="${i}">
-                    <label for="select-1-${i}">${val}</label>
+              ${Object.entries(SELECTIONS.firstOpts)
+                .map(
+                  ([key, val]) =>
+                    `
+                    <input type="checkbox" name="select-1" id="select-1-${key}" value="${key}">
+                    <label for="select-1-${key}">${val}</label>
                   `,
-              ).join("")}
+                )
+                .join("")}
             </form>
           </div>
           <div class="uals-question-container">
             <h3 id="uals-menu-header">Chọn câu trả lời cho câu hỏi loại 2</h3>
             <form id="select-2">
-              ${SECOND_SELECTIONS.map(
-                (val, i) =>
-                  `
-                  <input type="checkbox" name="select-2" id="select-2-${i}" value="${i}" />
-                  <label for="select-2-${i}">${val}</label>
+              ${Object.entries(SELECTIONS.secondOpts)
+                .map(
+                  ([key, val]) =>
+                    `
+                  <input type="checkbox" name="select-2" id="select-2-${key}" value="${key}" />
+                  <label for="select-2-${key}">${val}</label>
                 `,
-              ).join("")}
+                )
+                .join("")}
             </form>
           </div>
           <div class="uals-question-container">
@@ -367,13 +373,15 @@
               Chọn câu trả lời cho câu hỏi loại 3 (mức độ hài lòng)
             </h3>
             <form id="select-3">
-              ${THIRD_SELECTIONS.map(
-                (_, i) =>
-                  `
-                  <input type="checkbox" name="select-3" id="select-3-${i}" value="${i}" />
-                  <label for="select-3-${i}">Mức ${i + 1}</label>
+              ${Object.entries(SELECTIONS.thirdOpts)
+                .map(
+                  ([key, _]) =>
+                    `
+                  <input type="checkbox" name="select-3" id="select-3-${key}" value="${key}" />
+                  <label for="select-3-${key}">Mức ${key}</label>
                 `,
-              ).join("")}
+                )
+                .join("")}
             </form>
           </div>
           <div class="uals-btn-container">
@@ -389,29 +397,27 @@
     }
 
     tickOptsToPage() {
-      const { firstOpt, secondOpts, thirdOpts } = this.#model.getUserOpts();
-      document
-        .querySelector(`#select-1 input[id="select-1-${firstOpt}"]`)
-        ?.click();
-      for (const opt of secondOpts) {
-        document.querySelector(`#select-2 input[id="select-2-${opt}"]`).click();
-      }
-      for (const opt of thirdOpts) {
-        document.querySelector(`#select-3 input[id="select-3-${opt}"]`).click();
-      }
+      Object.values(this.#model.getUserOpts()).map((selections, optIndex) =>
+        selections.forEach((selection) =>
+          document
+            .querySelector(
+              `#select-${optIndex + 1} input[id="select-${optIndex + 1}-${selection}"]`,
+            )
+            .click(),
+        ),
+      );
     }
 
     _fetchUserOptsFromPage() {
+      function getSelections(optTh) {
+        return [
+          ...document.querySelectorAll(`#select-${optTh} input:checked`),
+        ].map((checkbox) => parseInt(checkbox.value));
+      }
       return {
-        firstOpt: parseInt(
-          document.querySelector("#select-1 input:checked").value,
-        ),
-        secondOpts: [
-          ...document.querySelectorAll("#select-2 input:checked"),
-        ].map((checkbox) => parseInt(checkbox.value)),
-        thirdOpts: [
-          ...document.querySelectorAll("#select-3 input:checked"),
-        ].map((checkbox) => parseInt(checkbox.value)),
+        firstOpts: getSelections(1),
+        secondOpts: getSelections(2),
+        thirdOpts: getSelections(3),
       };
     }
 
@@ -539,7 +545,7 @@
 
   const init = function () {
     if (window.location.pathname === "/sinhvien/phieukhaosat") new Controller();
-    else new FillSurvey();
+    else new DoSurvey();
   };
 
   init();
