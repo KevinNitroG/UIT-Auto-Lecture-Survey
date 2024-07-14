@@ -543,10 +543,10 @@
     }
   }
 
-  const init = function () {
+  function init() {
     if (window.location.pathname === "/sinhvien/phieukhaosat") new Controller();
     else new DoSurvey();
-  };
+  }
 
   init();
 })();
