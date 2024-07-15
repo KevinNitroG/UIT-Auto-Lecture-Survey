@@ -347,7 +347,7 @@
                 .map(
                   ([key, val]) =>
                     `
-                    <input type="checkbox" name="select-1" id="select-1-${key}" value="${key}">
+                    <input type="checkbox" name="select-1-${key}" id="select-1-${key}" value="${key}">
                     <label for="select-1-${key}">${val}</label>
                   `,
                 )
@@ -361,7 +361,7 @@
                 .map(
                   ([key, val]) =>
                     `
-                  <input type="checkbox" name="select-2" id="select-2-${key}" value="${key}" />
+                  <input type="checkbox" name="select-2-${key}" id="select-2-${key}" value="${key}" />
                   <label for="select-2-${key}">${val}</label>
                 `,
                 )
@@ -377,7 +377,7 @@
                 .map(
                   ([key, _]) =>
                     `
-                  <input type="checkbox" name="select-3" id="select-3-${key}" value="${key}" />
+                  <input type="checkbox" name="select-3-${key}" id="select-3-${key}" value="${key}" />
                   <label for="select-3-${key}">Mức ${key}</label>
                 `,
                 )
@@ -409,15 +409,17 @@
     }
 
     _fetchUserOptsFromPage() {
-      function getSelections(optTh) {
-        return [
-          ...document.querySelectorAll(`#select-${optTh} input:checked`),
-        ].map((checkbox) => parseInt(checkbox.value));
+      function getSelections(CSSSelector) {
+        const element = document.querySelector(CSSSelector);
+        const formData = new FormData(element);
+        return Object.values(Object.fromEntries([...formData])).map((val) =>
+          parseInt(val),
+        );
       }
       return {
-        firstOpts: getSelections(1),
-        secondOpts: getSelections(2),
-        thirdOpts: getSelections(3),
+        firstOpts: getSelections("#select-1"),
+        secondOpts: getSelections("#select-2"),
+        thirdOpts: getSelections("#select-3"),
       };
     }
 
