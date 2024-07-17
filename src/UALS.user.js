@@ -81,14 +81,13 @@
 
     #uals-menu-container {
       display: none;
-      opacity: 0;
-      visibility: hidden;
+      overflow: hidden;
+      transition: height 0.5s;
     }
 
     #uals-menu-container.show {
       display: inline-block;
-      opacity: 1;
-      visibility: visible;
+      height: auto;
     }
 
     #select-1, #select-2, #select-3 {
