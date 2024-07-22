@@ -4,8 +4,8 @@
 // @author          Kevin Nitro
 // @namespace       https://github.com/KevinNitroG
 // @description     Userscript tự động khảo sát môn học UIT. Khuyến nghị disable script khi không sử dụng, tránh conflict với các khảo sát / link khác của trường.
-// @downloadURL     https://github.com/KevinNitroG/UIT-Auto-Lecture-Survey/raw/main/src/UALS.user.js
-// @updateURL       https://github.com/KevinNitroG/UIT-Auto-Lecture-Survey/raw/main/src/UALS.user.js
+// @downloadURL     https://github.com/KevinNitroG/UIT-Auto-Lecture-Survey/raw/main/src/uals.user.js
+// @updateURL       https://github.com/KevinNitroG/UIT-Auto-Lecture-Survey/raw/main/src/uals.user.js
 // @supportURL      https://github.com/KevinNitroG/UIT-Auto-Lecture-Survey/issues
 // @license         https://github.com/KevinNitroG/UIT-Auto-Lecture-Survey/raw/main/LICENSE
 // @icon            https://github.com/KevinNitroG/UIT-Auto-Lecture-Survey/raw/main/assets/images/UIT-logo.png
@@ -27,31 +27,40 @@
   "use strict";
 
   const SELECTIONS = {
-    firstOpts: {
-      1: "<50%",
-      2: "50-80%",
-      3: ">80%",
-      4: "Không biết chuẩn đầu ra là gì",
+    first: {
+      opts: [
+        { label: "<50%", selector: "" },
+        { label: "50-80%", selector: "" },
+        { label: ">80%", selector: "" },
+        { label: "Không biết chuẩn đầu ra là gì", selector: "" },
+      ],
     },
-    secondOpts: {
-      1: "Dưới 50%",
-      2: "Từ 50 đến dưới 70%",
-      3: "Từ 70 đến dưới 90%",
-      4: "Trên 90%",
+    second: {
+      opts: [
+        { label: "Dưới 50%", selector: "" },
+        { label: "Từ 50 đến dưới 70%", selector: "" },
+        { label: "Từ 70 đến dưới 90%", selector: "" },
+        { label: "Trên 90%", selector: "" },
+      ],
     },
-    thirdOpts: {
-      1: "answer_cell_00MH01.answer-item.radio-item",
-      2: "answer_cell_00MH02.answer-item.radio-item",
-      3: "answer_cell_00MH03.answer-item.radio-item",
-      4: "answer_cell_00MH04.answer-item.radio-item",
+    third: {
+      container: ".answers-list.radio-list",
+      opts: [
+        { selector: "answer_cell_00MH01.answer-item.radio-item" },
+        { selector: "answer_cell_00MH02.answer-item.radio-item" },
+        { selector: "answer_cell_00MH03.answer-item.radio-item" },
+        { selector: "answer_cell_00MH04.answer-item.radio-item" },
+      ],
     },
   };
+
+  const SUBMIT_BUTTON_SELECTOR = 'button[type="submit"][id="movenextbtn"]';
 
   const WINDOW_DONE_MSG = "AULS - Done a survey";
   const WINDOW_DONE_TITLE = "HOÀN THÀNH KHẢO SÁT";
 
   const STYLE = `
-    #uals-container {
+    #uals__container {
       align-items: center;
       display: flex;
       flex-direction: column;
@@ -59,13 +68,13 @@
       // border: solid #115d9d 0.05rem;
     }
 
-    .uals-btn-container {
+    .uals__btn-container {
       align-items: center;
       display: flex;
       justify-content: center;
     }
 
-    .uals-btn {
+    .uals__btn {
       background-color: #115d9d;
       border-radius: 0.5rem;
       border: none;
@@ -75,28 +84,28 @@
       transition: background-color 0.3s ease-in-out;
     }
 
-    .uals-btn:hover {
+    .uals__btn:hover {
       background-color: #1678cb;
     }
 
-    #uals-menu-container {
+    #uals__menu-container {
       display: none;
       overflow: hidden;
       transition: height 0.5s;
     }
 
-    #uals-menu-container.show {
+    #uals__menu-container.uals__menu-container--show {
       display: inline-block;
       height: auto;
     }
 
-    #select-1, #select-2, #select-3 {
+    #uals__select-1, #uals__select-2, #uals__select-3 {
       align-items: center;
       display: flex;
       flex-direction: row;
     }
 
-    #select-1 > label, #select-2 > label, #select-3 > label {
+    #uals__select-1 > label, #uals__select-2 > label, #uals__select-3 > label {
       margin: 0 0.5rem 0 0;
       padding: 0 0.5rem 0 0.5rem;
       vertical-align: middle;
@@ -107,11 +116,17 @@
     #firstOpts;
     #secondOpts;
     #thirdOpts;
+    #firstOptsKey;
+    #secondOptsKey;
+    #thirdOptsKey;
 
     constructor() {
-      this.#firstOpts = GM_getValue("userFirstOpts", []);
-      this.#secondOpts = GM_getValue("userSecondOpts", []);
-      this.#thirdOpts = GM_getValue("userThirdOpts", []);
+      this.#firstOptsKey = "userFirstOpts";
+      this.#secondOptsKey = "usersecondOpts";
+      this.#thirdOptsKey = "userthirdOpts";
+      this.#firstOpts = GM_getValue(this.#firstOptsKey, []);
+      this.#secondOpts = GM_getValue(this.#secondOptsKey, []);
+      this.#thirdOpts = GM_getValue(this.#thirdOptsKey, []);
     }
 
     addStyles() {
@@ -133,9 +148,9 @@
     }
 
     saveUserOpts() {
-      GM_setValue("userFirstOpts", this.#firstOpts);
-      GM_setValue("userSecondOpts", this.#secondOpts);
-      GM_setValue("userThirdOpts", this.#thirdOpts);
+      GM_setValue(this.#firstOptsKey, this.#firstOpts);
+      GM_setValue(this.#secondOptsKey, this.#secondOpts);
+      GM_setValue(this.#thirdOptsKey, this.#thirdOpts);
     }
 
     deleteUserOpts() {
@@ -154,7 +169,7 @@
         GM_notification({
           text: "Bạn cần thiết lập các tuỳ chọn 🥵",
           title: "UALS",
-          tag: "UALS-require_config",
+          tag: "uals-require_config",
         });
         return false;
       }
@@ -200,20 +215,20 @@
     }
 
     _thirdType() {
-      const questions = document.querySelectorAll(".answers-list.radio-list");
+      const questions = document.querySelectorAll(SELECTIONS.third.container);
       if (questions.length === 0) return false;
-      for (const question of questions) {
+      questions.forEach((question) =>
         question
-          .querySelector(SELECTIONS[DoSurvey.getRandomElement(this.#thirdOpts)])
-          .click();
-      }
+          .querySelector(
+            SELECTIONS.third.opts[DoSurvey.getRandomElement(this.#thirdOpts)],
+          )
+          .click(),
+      );
       return true;
     }
 
     _submit() {
-      document
-        .querySelector('button[type="submit"][id="movenextbtn"]')
-        ?.click();
+      document.querySelector(SUBMIT_BUTTON_SELECTOR)?.click();
     }
 
     _done() {
@@ -254,7 +269,7 @@
           GM_notification({
             text: "Đã thực hiện xong tất cả các khảo sát 😇",
             title: "UALS",
-            tag: "UALS-Auto_survey_done",
+            tag: "uals-auto_survey_done",
           });
           this._removeListener();
           return;
@@ -280,7 +295,7 @@
         GM_notification({
           text: "Không có khảo sát nào cả 😕",
           title: "UALS",
-          tag: "UALS-No_survey",
+          tag: "uals-no_survey",
         });
         return;
       }
@@ -292,7 +307,7 @@
   class ViewRunAuto {
     btnHTML() {
       return `
-        <button class="uals-btn" id="uals-run-btn">
+        <button class="uals__btn" id="uals__run-btn">
           Run Auto
         </button>
       `;
@@ -300,7 +315,7 @@
 
     addHandler(getSurveyURLsFunc) {
       document
-        .querySelector("#uals-run-btn")
+        .querySelector("#uals__run-btn")
         .addEventListener("click", () => new AutoRun(getSurveyURLsFunc()));
     }
   }
@@ -314,23 +329,23 @@
 
     btnHTML() {
       return `
-        <button class="uals-btn" id="uals-config-btn">
+        <button class="uals__btn" id="uals__config-btn">
           Config
         </button>
       `;
     }
 
-    _saveConfigButtonHTML() {
+    _saveConfigBtnHTML() {
       return `
-        <button class="uals-btn" id="uals-save-config-btn">
+        <button class="uals__btn" id="uals__save-config-btn">
           Save
         </button>
       `;
     }
 
-    _resetConfigButtonHTML() {
+    _resetConfigBtnHTML() {
       return `
-        <button class="uals-btn" id="uals-reset-config-btn">
+        <button class="uals__btn" id="uals__reset-config-btn">
           Reset
         </button>
       `;
@@ -338,70 +353,70 @@
 
     configMenuHTML() {
       return `
-        <div id="uals-menu-container">
-          <div class="uals-question-container">
-            <h3 id="uals-menu-header">Chọn câu trả lời cho câu hỏi loại 1</h3>
-            <form id="select-1">
-              ${Object.entries(SELECTIONS.firstOpts)
+        <div id="uals__menu-container">
+          <div class="uals__question-container">
+            <h3 id="uals__menu-header">Chọn câu trả lời cho câu hỏi loại 1</h3>
+            <form id="uals__select-1">
+              ${SELECTIONS.first.opts
                 .map(
-                  ([key, val]) =>
+                  (opt, index) =>
                     `
-                    <input type="checkbox" name="select-1-${key}" id="select-1-${key}" value="${key}">
-                    <label for="select-1-${key}">${val}</label>
+                    <input type="checkbox" name="uals__select-1-${index}" id="uals__select-1-${index}" value="${index}">
+                    <label for="uals__select-1-${index}">${opt.label}</label>
                   `,
                 )
                 .join("")}
             </form>
           </div>
-          <div class="uals-question-container">
-            <h3 id="uals-menu-header">Chọn câu trả lời cho câu hỏi loại 2</h3>
-            <form id="select-2">
-              ${Object.entries(SELECTIONS.secondOpts)
+          <div class="uals__question-container">
+            <h3 id="uals__menu-header">Chọn câu trả lời cho câu hỏi loại 2</h3>
+            <form id="uals__select-2">
+              ${SELECTIONS.second.opts
                 .map(
-                  ([key, val]) =>
+                  (opt, index) =>
                     `
-                  <input type="checkbox" name="select-2-${key}" id="select-2-${key}" value="${key}" />
-                  <label for="select-2-${key}">${val}</label>
+                  <input type="checkbox" name="uals__select-2-${index}" id="uals__select-2-${index}" value="${index}" />
+                  <label for="uals__select-2-${index}">${opt.label}</label>
                 `,
                 )
                 .join("")}
             </form>
           </div>
-          <div class="uals-question-container">
-            <h3 id="uals-menu-header">
+          <div class="uals__question-container">
+            <h3 id="uals__menu-header">
               Chọn câu trả lời cho câu hỏi loại 3 (mức độ hài lòng)
             </h3>
-            <form id="select-3">
-              ${Object.entries(SELECTIONS.thirdOpts)
-                .map(
-                  ([key, _]) =>
-                    `
-                  <input type="checkbox" name="select-3-${key}" id="select-3-${key}" value="${key}" />
-                  <label for="select-3-${key}">Mức ${key}</label>
-                `,
-                )
+            <form id="uals__select-3">
+              ${SELECTIONS.third.opts
+                .map((_, index) => {
+                  const level = index + 1;
+                  return `
+                  <input type="checkbox" name="uals__select-3-${level}" id="uals__select-3-${level}" value="${level}" />
+                  <label for="uals__select-3-${level}">Mức ${level}</label>
+                `;
+                })
                 .join("")}
             </form>
           </div>
-          <div class="uals-btn-container">
-            ${this._resetConfigButtonHTML()}
-            ${this._saveConfigButtonHTML()}
+          <div class="uals__btn-container">
+            ${this._resetConfigBtnHTML()}
+            ${this._saveConfigBtnHTML()}
           </div>
         </div>
       `;
     }
 
     toggleConfigMenu() {
-      document.querySelector("#uals-menu-container")?.classList.toggle("show");
+      document
+        .querySelector("#uals__menu-container")
+        .classList.toggle("uals__menu-container--show");
     }
 
     tickOptsToPage() {
-      Object.values(this.#model.getUserOpts()).map((selections, optIndex) =>
-        selections.forEach((selection) =>
+      Object.values(this.#model.getUserOpts()).forEach((opts, selectionIndex) =>
+        opts.forEach((opt) =>
           document
-            .querySelector(
-              `#select-${optIndex + 1} input[id="select-${optIndex + 1}-${selection}"]`,
-            )
+            .querySelector(`#uals__select-${selectionIndex + 1}-${opt}`)
             .click(),
         ),
       );
@@ -416,9 +431,9 @@
         );
       }
       return {
-        firstOpts: getSelections("#select-1"),
-        secondOpts: getSelections("#select-2"),
-        thirdOpts: getSelections("#select-3"),
+        firstOpts: getSelections("#uals__select-1"),
+        secondOpts: getSelections("#uals__select-2"),
+        thirdOpts: getSelections("#uals__select-3"),
       };
     }
 
@@ -438,27 +453,14 @@
       });
     }
 
-    addHandlers(preRender) {
-      const configBtn = document.querySelector("#uals-config-btn");
-      configBtn.addEventListener(
-        "click",
-        () => {
-          preRender();
-          this.tickOptsToPage();
-        },
-        {
-          once: true,
-        },
-      );
+    addHandlers() {
+      const configBtn = document.querySelector("#uals__config-btn");
       configBtn.addEventListener("click", this.toggleConfigMenu);
-    }
-
-    addLazyHandlers() {
       this._saveUserOptsHandler(
-        document.querySelector("#uals-save-config-btn"),
+        document.querySelector("#uals__save-config-btn"),
       );
       this._resetUserOptsHandler(
-        document.querySelector("#uals-reset-config-btn"),
+        document.querySelector("#uals__reset-config-btn"),
       );
     }
   }
@@ -478,7 +480,7 @@
       this._render();
       this._addHandlers();
       if (!this.#model.checkUserOptsExist())
-        document.querySelector("#uals-config-btn").click();
+        this.#viewConfig.toggleConfigMenu();
     }
 
     static _getSurveyURLs() {
@@ -490,12 +492,12 @@
 
     _getContainer() {
       const html = `
-        <div id="uals-container">
+        <div id="uals__container">
         </div>
       `;
       const position = document.querySelector("#content .content");
       position.insertAdjacentHTML("afterbegin", html);
-      const container = position.querySelector("#uals-container");
+      const container = position.querySelector("#uals__container");
       return container;
     }
 
@@ -515,22 +517,23 @@
 
     _renderConfigMenu() {
       this._insertElement(this.#viewConfig.configMenuHTML());
-      this.#viewConfig.addLazyHandlers();
     }
 
     _render() {
       this._insertElement(this._bannerHTML());
       const btnContainer = `
-        <div class="uals-btn-container">
+        <div class="uals__btn-container">
           ${this.#viewConfig.btnHTML()}
           ${this.#viewRunAuto.btnHTML()}
         </div>
       `;
       this._insertElement(btnContainer);
+      this._insertElement(this.#viewConfig.configMenuHTML());
+      this.#viewConfig.tickOptsToPage();
     }
 
     _addHandlers() {
-      this.#viewConfig.addHandlers(() => this._renderConfigMenu());
+      this.#viewConfig.addHandlers();
       this.#viewRunAuto.addHandler(() => View._getSurveyURLs());
     }
   }

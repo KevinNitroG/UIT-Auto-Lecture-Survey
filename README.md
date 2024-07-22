@@ -29,23 +29,22 @@ Script tự động khảo sát môn học UIT
 
 ## 📃 TABLE OF CONTENTS
 
-<!-- toc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [🎆 CHỨC NĂNG](#%F0%9F%8E%86-ch%E1%BB%A9c-nang)
-- [🥂 DEMO](#%F0%9F%A5%82-demo)
-  * [🖼️ Image](#%F0%9F%96%BC%EF%B8%8F-image)
-  * [🎬 Video](#%F0%9F%8E%AC-video)
-- [🪴 HƯỚNG DẪN](#%F0%9F%AA%B4-h%C6%B0%E1%BB%9Bng-d%E1%BA%ABn)
-  * [1️⃣ Cài đặt extension Tampermonkey](#1%EF%B8%8F%E2%83%A3-cai-d%E1%BA%B7t-extension-tampermonkey)
-  * [2️⃣ Cài đặt script](#2%EF%B8%8F%E2%83%A3-cai-d%E1%BA%B7t-script)
-  * [3️⃣ Ấn khảo sát](#3%EF%B8%8F%E2%83%A3-%E1%BA%A5n-kh%E1%BA%A3o-sat)
-  * [4️⃣ Tắt script khi không sử dụng](#4%EF%B8%8F%E2%83%A3-t%E1%BA%AFt-script-khi-khong-s%E1%BB%AD-d%E1%BB%A5ng)
-- [📝 LICENSE](#%F0%9F%93%9D-license)
-- [⭐ STAR GRAPH](#%E2%AD%90-star-graph)
+- [🎆 CHỨC NĂNG](#-ch%E1%BB%A8c-n%C4%82ng)
+- [🥂 DEMO](#-demo)
+  - [🖼️ Image](#-image)
+  - [🎬 Video](#-video)
+- [🪴 HƯỚNG DẪN](#-h%C6%AF%E1%BB%9Ang-d%E1%BA%AAn)
+  - [1️⃣ Cài đặt extension Tampermonkey](#-c%C3%A0i-%C4%91%E1%BA%B7t-extension-tampermonkey)
+  - [2️⃣ Cài đặt script](#-c%C3%A0i-%C4%91%E1%BA%B7t-script)
+  - [3️⃣ Ấn khảo sát](#-%E1%BA%A4n-kh%E1%BA%A3o-s%C3%A1t)
+  - [4️⃣ Tắt script khi không sử dụng](#-t%E1%BA%AFt-script-khi-kh%C3%B4ng-s%E1%BB%AD-d%E1%BB%A5ng)
+- [📝 LICENSE](#-license)
+- [⭐ STAR GRAPH](#-star-graph)
 
-<!-- tocstop -->
-
----
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 🎆 CHỨC NĂNG
 
@@ -80,7 +79,7 @@ No!
 
 ### 2️⃣ Cài đặt script
 
-[![UALS.user.js](https://img.shields.io/badge/UALS-Tampermonkey_Userscript-89b4fa?style=for-the-badge)](../../raw/main/src/UALS.user.js)
+[![uals.user.js](https://img.shields.io/badge/UALS-Tampermonkey_Userscript-89b4fa?style=for-the-badge)](../../raw/main/src/uals.user.js)
 
 ### 3️⃣ Ấn khảo sát
 
