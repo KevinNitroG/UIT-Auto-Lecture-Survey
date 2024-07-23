@@ -505,7 +505,7 @@
       this.#container.insertAdjacentHTML("beforeend", element);
     }
 
-    _bannerHTML() {
+    _headerHTML() {
       return `
         <h2 align="center" style="margin: auto;">
           <a href="https://github.com/KevinNitroG/UIT-Auto-Lecture-Survey" target="_blank">
@@ -520,7 +520,7 @@
     }
 
     _render() {
-      this._insertElement(this._bannerHTML());
+      this._insertElement(this._headerHTML());
       const btnContainer = `
         <div class="uals__btn-container">
           ${this.#viewConfig.btnHTML()}
