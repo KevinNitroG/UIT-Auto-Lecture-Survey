@@ -54,9 +54,12 @@
     },
   };
 
+  const BROADCAST_CHANNEL_NAME = 'uals';
+
   const SUBMIT_BUTTON_SELECTOR = 'button[type="submit"][id="movenextbtn"]';
 
-  const WINDOW_DONE_MSG = 'AULS - Done a survey';
+  const SURVEY_DONE_MSG = 'uals-survey-done';
+  const SURVEY_FAIL_MSG = 'uals-survey-fail';
   const WINDOW_DONE_TITLE = 'HOÀN THÀNH KHẢO SÁT';
 
   const STYLE = `
@@ -94,18 +97,33 @@
       transition: height 0.5s;
     }
 
-    #.uals__menu-container--show {
+    .uals__menu-container--show {
       display: inline-block !important;
       height: auto;
     }
 
-    #uals__select-1, #uals__select-2, #uals__select-3 {
+    .uals__run-btn--unavailable, .uals__run-btn--unavailable:hover {
+      cursor: not-allowed;
+      filter: brightness(70%);
+    }
+
+    .uals__run-btn--running {
+      background-color: red !important;
+    }
+
+    .uals__please_star {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+    }
+
+    .uals__form-select {
       align-items: center;
       display: flex;
       flex-direction: row;
     }
 
-    #uals__select-1 > label, #uals__select-2 > label, #uals__select-3 > label {
+    .uals__form-select>label {
       margin: 0 0.5rem 0 0;
       padding: 0 0.5rem 0 0.5rem;
       vertical-align: middle;
@@ -177,20 +195,48 @@
     }
   }
 
-  class BroadcastService {
-    #channelName;
+  class BroadcastSvc {
+    #channel;
 
     constructor() {
-      this.#channelName = 'uals';
+      this.#channel = new BroadcastChannel(BROADCAST_CHANNEL_NAME);
+    }
+
+    addReceiveMsgListener(callback) {
+      const handleEvent = (ev) => {
+        switch (ev?.data?.msg) {
+          case SURVEY_DONE_MSG:
+            callback();
+            break;
+          case SURVEY_FAIL_MSG:
+            this.removeReceiveMsgListener();
+            break;
+        }
+      };
+      this.#channel.addEventListener('message', handleEvent);
+    }
+
+    removeReceiveMsgListener() {
+      this.#channel.close();
+    }
+
+    sendDoneMsg() {
+      this.#channel.postMessage({ msg: SURVEY_DONE_MSG });
+    }
+
+    sendFailMsg() {
+      this.#channel.postMessage({ msg: SURVEY_FAIL_MSG });
     }
   }
 
   class DoSurvey {
+    #broadcast;
     #firstOpts;
     #secondOpts;
     #thirdOpts;
 
     constructor() {
+      this.#broadcast = BroadcastSvc();
       const {
         firstOpt: firstOpts,
         secondOpts,
@@ -244,7 +290,7 @@
         document.querySelector('.site-name')?.innerText.trim() ===
         WINDOW_DONE_TITLE
       ) {
-        window.opener.postMessage(WINDOW_DONE_MSG, '*');
+        this.#broadcast.sendDoneMsg();
         window.close();
       }
     }
@@ -256,64 +302,51 @@
       check = this._secondType() || check;
       check = this._thirdType() || check;
       if (check) this._submit();
+      else this.#broadcast.sendFailMsg();
     }
   }
 
   class AutoRun {
     #surveys;
     #current;
+    #broadcast;
 
     constructor(surveys) {
       this.#surveys = surveys;
       this.#current = 0;
-      this._listenEvent = this._listenEvent.bind(this); // Copilot told me to do this. IDK why :v
+      this.#broadcast = BroadcastSvc();
+      // this._iterateSurvey = this._iterateSurvey.bind(this); // Copilot told me to do this. IDK why :v
+      this.#broadcast.addReceiveMsgListener(() => this._iterateSurvey());
       this._run();
     }
 
-    _listenEvent(e) {
-      if (e.data === WINDOW_DONE_MSG) {
-        this.#current++;
-        if (this.#current >= this.#surveys.length) {
-          GM_notification({
-            text: 'Đã thực hiện xong tất cả các khảo sát 😇',
-            title: 'UALS',
-            tag: 'uals-auto_survey_done',
-          });
-          this._removeListener();
-          return;
-        }
-        this._doSurveys();
-      }
-    }
-
-    _addListener() {
-      window.addEventListener('message', this._listenEvent);
-    }
-
-    _removeListener() {
-      window.removeEventListener('message', this._listenEvent);
-    }
-
-    _doSurveys() {
-      GM_openInTab(this.#surveys[this.#current], true);
+    _iterateSurvey() {
+      this.#current++;
+      if (this.#current >= this.#surveys.length) {
+        GM_notification({
+          text: 'Đã hoàn thành xong tất cả các khảo sát 😇',
+          title: 'UALS',
+          tag: 'uals-auto_survey_done',
+        });
+        this.#broadcast.removeReceiveMsgListener();
+      } else this._run();
     }
 
     _run() {
-      if (this.#current >= this.#surveys.length) {
-        GM_notification({
-          text: 'Không có khảo sát nào cả 😕',
-          title: 'UALS',
-          tag: 'uals-no_survey',
-        });
-        return;
-      }
-      this._addListener();
-      this._doSurveys();
+      GM_openInTab(this.#surveys[this.#current], true);
     }
   }
 
   class ViewRunAuto {
-    btnHTML() {
+    #surveyList;
+    #autoRun;
+
+    constructor(surveyList) {
+      this.#surveyList = surveyList;
+      this.#autoRun = null;
+    }
+
+    _startBtnHTML() {
       return `
         <button class="uals__btn" id="uals__run-btn">
           Run Auto
@@ -321,10 +354,39 @@
       `;
     }
 
-    addHandler(getSurveyURLsFunc) {
-      document
-        .querySelector('#uals__run-btn')
-        .addEventListener('click', () => new AutoRun(getSurveyURLsFunc()));
+    _stopBtnHTML() {
+      return `
+        <button class="uals__btn uals__run-btn--running" id="uals__run-btn">
+          Stop Auto
+        </button>
+      `;
+    }
+
+    _unavailableBtnHTML() {
+      return `
+        <button class="uals__btn uals__run-btn--unavailable" id="uals__run-btn" disabled>
+          No Survey
+        </button>
+      `;
+    }
+
+    btnHTML() {
+      if (this.#surveyList.length === 0) return this._unavailableBtnHTML();
+      else this._startBtnHTML();
+    }
+
+    addHandler() {
+      document.querySelector('#uals__run-btn').addEventListener('click', () => {
+        if (this.#autoRun) {
+          GM_notification({
+            text: 'Bạn đã dùng Auto Run rồi. Hãy refresh trang để refresh',
+            title: 'UALS',
+            tag: 'uals-already_auto_run',
+          });
+          return;
+        }
+        this.#autoRun = new AutoRun(this.#surveyList);
+      });
     }
   }
 
@@ -340,6 +402,12 @@
         <button class="uals__btn" id="uals__config-btn">
           Config
         </button>
+      `;
+    }
+
+    _pleaseStarHTML() {
+      return `
+        <p class="uals__please_star">👆 Cho mình xin 1 star repo dới 👆</p>
       `;
     }
 
@@ -362,9 +430,10 @@
     configMenuHTML() {
       return `
         <div id="uals__menu-container">
-          <section class="uals__question-section>"
+          ${this._pleaseStarHTML()}
+          <section class="uals__question-section">
             <h3 id="uals__menu-header">Chọn câu trả lời cho câu hỏi loại 1</h3>
-            <form id="uals__select-1">
+            <form class="uals__form-select" id="uals__select-1">
               ${SELECTIONS.first.opts
                 .map(
                   (opt, index) =>
@@ -376,9 +445,9 @@
                 .join('')}
             </form>
           </section>
-          <section class="uals__question-section>"
+          <section class="uals__question-section">
             <h3 id="uals__menu-header">Chọn câu trả lời cho câu hỏi loại 2</h3>
-            <form id="uals__select-2">
+            <form class="uals__form-select" id="uals__select-2">
               ${SELECTIONS.second.opts
                 .map(
                   (opt, index) =>
@@ -390,11 +459,11 @@
                 .join('')}
             </form>
           </section>
-          <section class="uals__question-section>"
+          <section class="uals__question-section">
             <h3 id="uals__menu-header">
               Chọn câu trả lời cho câu hỏi loại 3 (mức độ hài lòng)
             </h3>
-            <form id="uals__select-3">
+            <form class="uals__form-select" id="uals__select-3">
               ${SELECTIONS.third.opts
                 .map((_, index) => {
                   const level = index + 1;
@@ -482,7 +551,7 @@
     constructor() {
       this.#container = this._getContainer();
       this.#model = new Model();
-      this.#viewRunAuto = new ViewRunAuto();
+      this.#viewRunAuto = new ViewRunAuto(View._getSurveyURLs());
       this.#viewConfig = new ViewConfig(this.#model);
       this.#model.addStyles();
       this._render();
@@ -542,7 +611,7 @@
 
     _addHandlers() {
       this.#viewConfig.addHandlers();
-      this.#viewRunAuto.addHandler(() => View._getSurveyURLs());
+      this.#viewRunAuto.addHandler();
     }
   }
 
