@@ -103,7 +103,7 @@
     }
 
     .uals__run-btn--unavailable, .uals__run-btn--unavailable:hover {
-      cursor: not-allowed;
+      cursor: default;
       filter: brightness(70%);
     }
 
