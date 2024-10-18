@@ -255,22 +255,26 @@
 
     // TODO: WIP. Check this again. Be careful of value and index. It should be value
     /** Fill in the first type */
-    _firstType() {
+    _firstTypeRun() {
       const labels = document.querySelectorAll('label.answertext');
       for (const label of labels) {
-        if (label.innerText.trim() === this.#firstOpts) label.click();
+        if (label.innerText.trim() === this.#firstOpts) {
+          label.click();
+        }
       }
     }
 
     // TODO: WIP. Find questions and each in question, select 1 random.
     /** Fill in the second type */
-    _secondType() {
+    _secondTypeRun() {
       // const labels = document.querySelectorAll('label.answertext');
     }
 
-    _thirdType() {
+    _thirdTypeRun() {
       const questions = document.querySelectorAll(SELECTIONS.third.container);
-      if (questions.length === 0) return false;
+      if (questions.length === 0) {
+        return false;
+      }
       questions.forEach((question) =>
         question
           .querySelector(
@@ -298,11 +302,14 @@
     _run() {
       this._done();
       let check = false;
-      check = this._firstType() || check;
-      check = this._secondType() || check;
-      check = this._thirdType() || check;
-      if (check) this._submit();
-      else this.#broadcast.sendFailMsg();
+      check = this._firstTypeRun() || check;
+      check = this._secondTypeRun() || check;
+      check = this._thirdTypeRun() || check;
+      if (check) {
+        this._submit();
+      } else {
+        this.#broadcast.sendFailMsg();
+      }
     }
   }
 
@@ -329,7 +336,9 @@
           tag: 'uals-auto_survey_done',
         });
         this.#broadcast.removeReceiveMsgListener();
-      } else this._run();
+      } else {
+        this._run();
+      }
     }
 
     _run() {
@@ -371,8 +380,9 @@
     }
 
     btnHTML() {
-      if (this.#surveyList.length === 0) return this._unavailableBtnHTML();
-      else this._startBtnHTML();
+      return this.#surveyList.length === 0
+        ? this._unavailableBtnHTML()
+        : this._startBtnHTML();
     }
 
     addHandler() {
@@ -556,8 +566,9 @@
       this.#model.addStyles();
       this._render();
       this._addHandlers();
-      if (!this.#model.checkUserOptsExist())
+      if (!this.#model.checkUserOptsExist()) {
         this.#viewConfig.toggleConfigMenu();
+      }
     }
 
     static _getSurveyURLs() {
@@ -625,8 +636,11 @@
   }
 
   function init() {
-    if (window.location.pathname === '/sinhvien/phieukhaosat') new Controller();
-    else new DoSurvey();
+    if (window.location.pathname === '/sinhvien/phieukhaosat') {
+      new Controller();
+    } else {
+      new DoSurvey();
+    }
   }
 
   init();
