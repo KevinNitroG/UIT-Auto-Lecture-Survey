@@ -323,13 +323,17 @@
       this.#current = 0;
       this.#broadcast = BroadcastSvc();
       // this._iterateSurvey = this._iterateSurvey.bind(this); // Copilot told me to do this. IDK why :v
-      this.#broadcast.addReceiveMsgListener(() => this._iterateSurvey());
+      this.#broadcast.addReceiveMsgListener(() => {
+        window.addEventListener('beforeunload', this._confirmCloseTab);
+        this._iterateSurvey();
+      });
       this._run();
     }
 
     _iterateSurvey() {
       this.#current++;
       if (this.#current >= this.#surveys.length) {
+        window.removeEventListener('beforeunload', this._confirmCloseTab);
         GM_notification({
           text: 'Đã hoàn thành xong tất cả các khảo sát 😇',
           title: 'UALS',
@@ -343,6 +347,11 @@
 
     _run() {
       GM_openInTab(this.#surveys[this.#current], true);
+    }
+
+    _confirmCloseTab(e) {
+      e.preventDefault();
+      e.returnValue = '';
     }
   }
 
